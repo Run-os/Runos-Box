@@ -20,34 +20,6 @@ if [ "$(id -u)" -ne 0 ]; then
     exit $?
 fi
 
-declare -a menu_options
-declare -A commands
-menu_options=(
-    "更新系统软件包"
-    "安装并启动Docker"
-    "安装1panel面板管理工具"
-    "查看1panel用户信息"
-    "安装Nginx Proxy Manager"
-    "安装Nginx"
-    "配置openai和groq反代"
-    "swap修改"
-    "docker-start.sh脚本"
-    "更新脚本"
-)
-
-commands=(
-    ["更新系统软件包"]="update_system_packages"
-    ["安装并启动Docker"]="install_docker"
-    ["安装1panel面板管理工具"]="install_1panel_on_linux"
-    ["查看1panel用户信息"]="read_user_info"
-    ["安装Nginx Proxy Manager"]="install_nginx_proxy_manager"
-    ["安装Nginx"]="install_nginx"
-    ["配置openai和groq反代"]="configured_openai_groq_reverse_proxy"
-    ["swap修改"]="swapsh"
-    ["docker-start.sh脚本"]="docker_start_sh"
-    ["更新脚本"]="update_scripts"
-)
-
 # 更新系统软件包
 update_system_packages() {
     green "Setting timezone Asia/Shanghai..."
