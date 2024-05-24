@@ -185,10 +185,10 @@ function start_menu() {
   green " 3. 安装Duplicati"
   green " 4. 安装GPT-free-api"
   green " 5. 安装memos"
-  yellow " --------------------------------------------------"
-  green " 6. 安装大圣的日常--脚本"
-  green " 7. 更新脚本"
+  yellow " --------------以下是其他人的脚本--------------------"
+  green " 6. 大圣的日常-docker轻服务器脚本"
   green " =================================================="
+  green " 7. 更新脚本"
   green " 0. 退出脚本"
   echo
   read -p "请输入数字:" menuNumberInput
@@ -216,11 +216,9 @@ function start_menu() {
 
   6)
     install_dashen_scripts
-    start_menu
     ;;
   7)
     update_scripts
-    start_menu
     ;;
   0)
     exit 1

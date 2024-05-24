@@ -41,6 +41,7 @@ update_system_packages() {
         echo "curl is already installed."
     fi
 }
+
 # 安装并启动Docker
 install_docker() {
     # 检查是否已安装Docker
@@ -99,12 +100,13 @@ install_1panel_on_linux() {
         red "未安装1panel"
     fi
 }
+
 # 查看1panel用户信息
-read_user_info() {
+read_1panel_info() {
     sudo 1pctl user-info
 }
 
-#
+# 安装Nginx Proxy Manager
 install_nginx_proxy_manager() {
     mkdir -p $docker_data/npm1
     cd $docker_data/npm1
@@ -130,6 +132,7 @@ EOL
     green "Nginx Proxy Manager 安装成功，请访问 http://你的服务器IP地址:81"
 }
 
+# 安装Nginx
 install_nginx() {
     if command -v nginx &>/dev/null; then
         green "已经安装nginx，跳过安装步骤"
@@ -140,6 +143,7 @@ install_nginx() {
     green "Nginx 安装成功"
 }
 
+# 配置openai和groq反代
 configured_openai_groq_reverse_proxy() {
     green "配置openai和groq反代"
     sudo tee /etc/nginx/conf.d/openai.conf <<'EOL'
@@ -224,17 +228,17 @@ function start_menu() {
     yellow " =================================================="
     green " 1. 更新系统软件包"
     green " 2. swap修改"
-    yellow " --------------------------------------------------"
+    yellow " -----------------Docker相关---------------------"
     green " 3. 安装并启动Docker"
     green " 4. 安装1panel面板管理工具"
     green " 5. 查看1panel用户信息"
-    green " 6. 安装Nginx Proxy Manager"
-    yellow " --------------------------------------------------"
-    green " 7. 安装Nginx"
-    green " 11. 配置openai和groq反代"
-    yellow " --------------------------------------------------"
-    green " 12. docker-start.sh脚本"
-    green " 13. 更新脚本"
+    yellow " -----------------Nginx相关-----------------------"
+    green " 6. 安装Nginx"
+    green " 7. 安装Nginx Proxy Manager"
+    green " 8. 配置openai和groq反代"
+    yellow " ----------------其他脚本-------------------------"
+    green " 9. docker-start.sh脚本"
+    green " 10. 更新脚本"
     green " =================================================="
     green " 0. 退出脚本"
     echo
@@ -246,6 +250,7 @@ function start_menu() {
         ;;
     2)
         swapsh
+        start_menu
         ;;
     3)
         install_docker
@@ -253,24 +258,31 @@ function start_menu() {
         ;;
     4)
         install_1panel_on_linux
+        start_menu
         ;;
     5)
-        read_user_info
+        read_1panel_info
+        start_menu
         ;;
     6)
-        install_nginx_proxy_manager
+        install_nginx
+        start_menu
         ;;
     7)
-        install_nginx
+        install_nginx_proxy_manager
+        start_menu
         ;;
-    11)
+    8)
         configured_openai_groq_reverse_proxy
+        start_menu
         ;;
-    12)
+    9)
         docker_start_sh
+        start_menu
         ;;
-    13)
+    10)
         update_scripts
+        start_menu
         ;;
     0)
         exit 1
