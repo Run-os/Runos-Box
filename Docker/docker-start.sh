@@ -27,6 +27,7 @@ install_docker() {
     green "验证Docker是否安装成功,显示版本号则为安装成功"
     docker --version
   fi
+
   # 检查是否已安装Docker-compose
   if command -v docker-compose &>/dev/null; then
     green "Docker-compose 已经安装，跳过安装步骤"
@@ -38,6 +39,29 @@ install_docker() {
     docker-compose --version
     # 下面这个好像也可以，从Debian/Ubuntu软件源一键安装
     # apt install -y docker.io  docker-compose
+  fi
+
+  read -p "是否需要更换镜像源？(y/n)" answer
+  if [ "$answer" != "${answer#[Yy]}" ]; then
+    # 更换镜像源
+    mkdir -p /etc/docker
+    tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": [
+    "https://0b27f0a81a00f3560fbdc00ddd2f99e0.mirror.swr.myhuaweicloud.com",
+    "https://ypzju6vq.mirror.aliyuncs.com",
+    "https://registry.docker-cn.com",
+    "http://hub-mirror.c.163.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+EOF
+    systemctl daemon-reload
+    systemctl restart docker
+    green "镜像源已更换为国内镜像"
+    docker info
+  else
+    yellow "跳过更换镜像源"
   fi
 }
 
