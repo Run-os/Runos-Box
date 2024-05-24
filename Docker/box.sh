@@ -44,33 +44,35 @@ update_system_packages() {
 
 # 安装并启动Docker
 install_docker() {
-    # 检查是否已安装Docker
-    if command -v docker &>/dev/null; then
-        green "Docker 已经安装，跳过安装步骤"
-    else
-        # 安装Docker
-        green "检测到未安装Docker，开始安装..."
-        curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
-        # 设置开机自启
-        systemctl enable --now docker
-        # 验证Docker是否安装成功
-        green "验证Docker是否安装成功,显示版本号则为安装成功"
-        docker --version
-    fi
+  # 检查是否已安装Docker
+  if command -v docker &>/dev/null; then
+    green "Docker 已经安装，跳过安装步骤"
+  else
+    # 安装Docker
+    green "检测到未安装Docker，开始安装..."
+    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+    # 设置开机自启
+    systemctl enable --now docker
+    # 验证Docker是否安装成功
+    green "验证Docker是否安装成功,显示版本号则为安装成功"
+    docker --version
+  fi
 
-    # 检查是否已安装Docker-compose
-    if command -v docker-compose &>/dev/null; then
-        green "Docker-compose 已经安装，跳过安装步骤"
-    else
-        # 安装Docker-compose
-        green "检测到未安装Docker-compose,开始安装..."
-        curl -fsSL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
-        docker-compose --version
-        # 下面这个好像也可以，从Debian/Ubuntu软件源一键安装
-        # apt install -y docker.io  docker-compose
-    fi
+  # 检查是否已安装Docker-compose
+  if command -v docker-compose &>/dev/null; then
+    green "Docker-compose 已经安装，跳过安装步骤"
+  else
+    # 安装Docker-compose
+    green "检测到未安装Docker-compose,开始安装..."
+    curl -fsSL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    docker-compose --version
+    # 下面这个好像也可以，从Debian/Ubuntu软件源一键安装
+    # apt install -y docker.io  docker-compose
+  fi
 
+  read -p "是否需要更换镜像源？(y/n)" answer
+  if [ "$answer" != "${answer#[Yy]}" ]; then
     # 更换镜像源
     mkdir -p /etc/docker
     tee /etc/docker/daemon.json <<-'EOF'
@@ -88,6 +90,9 @@ EOF
     systemctl restart docker
     green "镜像源已更换为国内镜像"
     docker info
+  else
+    yellow "跳过更换镜像源"
+  fi
 }
 
 # 安装1panel面板
@@ -229,7 +234,7 @@ function start_menu() {
     green " 1. 更新系统软件包"
     green " 2. swap修改"
     yellow " -----------------Docker相关---------------------"
-    green " 3. 安装并启动Docker"
+    green " 3. 安装Docker、更换镜像源"
     green " 4. 安装1panel面板管理工具"
     green " 5. 查看1panel用户信息"
     yellow " -----------------Nginx相关-----------------------"
