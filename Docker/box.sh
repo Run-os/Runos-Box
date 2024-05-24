@@ -278,11 +278,9 @@ function start_menu() {
         ;;
     9)
         docker_start_sh
-        start_menu
         ;;
     10)
         update_scripts
-        start_menu
         ;;
     0)
         exit 1
