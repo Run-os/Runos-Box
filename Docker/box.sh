@@ -10,7 +10,8 @@ highlight() { echo -e "\033[32m\033[01m$1\033[0m"; }
 cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
-docker_data = "/root/data/docker_data"
+docker_data="/root/data/docker_data"
+
 # 检查是否以 root 用户身份运行
 if [ "$(id -u)" -ne 0 ]; then
     green "注意！输入密码过程不显示*号属于正常现象"
@@ -113,8 +114,8 @@ read_1panel_info() {
 
 # 安装Nginx Proxy Manager
 install_nginx_proxy_manager() {
-    mkdir -p $docker_data/npm1
-    cd $docker_data/npm1
+    mkdir -p $docker_data/npm
+    cd $docker_data/npm
     # 创建docker-compose文件
 
     cat >docker-compose.yml <<'EOL'
