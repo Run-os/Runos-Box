@@ -236,7 +236,7 @@ function start_menu() {
     green " 6. 安装Nginx"
     green " 7. 安装Nginx Proxy Manager"
     green " 8. 配置openai和groq反代"
-    yellow " ----------------其他脚本-------------------------"
+    yellow " -----------------其他脚本-------------------------"
     green " 9. docker-start.sh脚本"
     green " 10. 更新脚本"
     green " =================================================="
