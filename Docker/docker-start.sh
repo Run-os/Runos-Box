@@ -195,9 +195,9 @@ update_scripts() {
 #主菜单
 function start_menu() {
   clear
-  red " Runos-Box Linux Supported ONLY"
+  red " Runos-Box Docker-start Linux Supported ONLY"
   green " FROM: https://github.com/Run-os/Runos-Box "
-  green " USE:  wget -O box.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh "
+  green " USE:  wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh "
   yellow " =================================================="
   green " 1. 安装Docker"
   green " 2. 安装clouddrive2"
