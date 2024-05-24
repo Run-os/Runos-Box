@@ -21,18 +21,6 @@ if [ "$(id -u)" -ne 0 ]; then
   exit $?
 fi
 
-declare -a menu_options
-declare -A commands
-menu_options=(
-  "安装Docker"
-  "clouddrive2"
-  "Duplicati"
-  "GPT-free-api"
-  "memos"
-  "大圣的日常--脚本"
-  "更新脚本"
-)
-
 commands=(
   ["安装Docker"]="install_docker"
   ["clouddrive2"]="install_clouddrive2"
@@ -198,72 +186,69 @@ install_dashen_scripts() {
 
 # 更新自己
 update_scripts() {
-  wget -O docker-start.sh https://gitee.com/runos/data-file/raw/master/Docker/docker-start.sh && chmod +x docker-start.sh
-  echo "脚本已更新并保存在当前目录 docker-start.sh，现在将执行新脚本。"
+  wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh
+  echo "脚本已更新并保存在当前目录 docker-start.sh,现在将执行新脚本。"
   ./docker-start.sh
   exit 0
 }
 
-show_menu() {
+#主菜单
+function start_menu() {
   clear
-  greenline "————————————————————————————————————————————————————"
-  echo '
-    ***********  DIY docker轻服务器  ***************
-    环境:Ubuntu/debian
-    脚本作用:个人自用docker轻服务器脚本'
-  greenline "————————————————————————————————————————————————————"
-  echo "请选择操作："
+  red " Runos-Box Linux Supported ONLY"
+  green " FROM: https://github.com/Run-os/Runos-Box "
+  green " USE:  wget -O box.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh "
+  yellow " =================================================="
+  green " 1. 安装Docker"
+  green " 2. 安装clouddrive2"
+  green " 3. 安装Duplicati"
+  green " 4. 安装GPT-free-api"
+  green " 5. 安装memos"
+  yellow " --------------------------------------------------"
+  green " 6. 安装大圣的日常--脚本"
+  green " 7. 更新脚本"
+  green " =================================================="
+  green " 0. 退出脚本"
+  echo
+  read -p "请输入数字:" menuNumberInput
+  case "$menuNumberInput" in
+  1)
+    install_docker
+    start_menu
+    ;;
+  2)
+    install_clouddrive2
+    start_menu
+    ;;
+  3)
+    install_Duplicati
+    start_menu
+    ;;
+  4)
+    install_GPT-free-api
+    start_menu
+    ;;
+  5)
+    install_memos
+    start_menu
+    ;;
 
-  # 特殊处理的项数组
-  special_items=("大圣的日常--脚本" "安装并启动Docker")
-  for i in "${!menu_options[@]}"; do
-    if [[ " ${special_items[*]} " =~ " ${menu_options[i]} " ]]; then
-      # 如果当前项在特殊处理项数组中，使用特殊颜色
-      cyan "$((i + 1)). ${menu_options[i]}"
-    else
-      # 否则，使用普通格式
-      echo "$((i + 1)). ${menu_options[i]}"
-    fi
-  done
+  6)
+    install_dashen_scripts
+    start_menu
+    ;;
+  7)
+    update_scripts
+    start_menu
+    ;;
+  0)
+    exit 1
+    ;;
+  *)
+    clear
+    red "请输入正确数字 !"
+    start_menu
+    ;;
+  esac
 }
-
-handle_choice() {
-  local choice=$1
-  # 检查输入是否为空
-  if [[ -z $choice ]]; then
-    echo -e "${RED}输入不能为空，请重新选择。${NC}"
-    return
-  fi
-
-  # 检查输入是否为数字
-  if ! [[ $choice =~ ^[0-9]+$ ]]; then
-    echo -e "${RED}请输入有效数字!${NC}"
-    return
-  fi
-
-  # 检查数字是否在有效范围内
-  if [[ $choice -lt 1 ]] || [[ $choice -gt ${#menu_options[@]} ]]; then
-    echo -e "${RED}选项超出范围!${NC}"
-    echo -e "${YELLOW}请输入 1 到 ${#menu_options[@]} 之间的数字。${NC}"
-    return
-  fi
-
-  # 执行命令
-  if [ -z "${commands[${menu_options[$choice - 1]}]}" ]; then
-    echo -e "${RED}无效选项，请重新选择。${NC}"
-    return
-  fi
-
-  "${commands[${menu_options[$choice - 1]}]}"
-}
-
-while true; do
-  show_menu
-  read -p "请输入选项的序号(输入q退出): " choice
-  if [[ $choice == 'q' ]]; then
-    break
-  fi
-  handle_choice $choice
-  echo "按任意键继续..."
-  read -n 1 # 等待用户按键
-done
+start_menu "first"

@@ -229,7 +229,7 @@ swapsh() {
 
 # docker-start.sh脚本
 docker_start_sh() {
-    wget -O docker-start.sh https://gitee.com/runos/data-file/raw/master/Docker/docker-start.sh && chmod +x docker-start.sh
+    wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh
     echo "脚本已更新并保存在当前目录 docker-start.sh,现在将执行新脚本。"
     ./docker-start.sh
     exit 0
@@ -237,9 +237,9 @@ docker_start_sh() {
 
 # 更新自己
 update_scripts() {
-    wget -O linux-start.sh https://gitee.com/runos/data-file/raw/master/Docker/linux-start.sh && chmod +x linux-start.sh
-    echo "脚本已更新并保存在当前目录 linux-start.sh,现在将执行新脚本。"
-    ./linux-start.sh
+    wget -O box.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh
+    echo "脚本已更新并保存在当前目录 box.sh,现在将执行新脚本。"
+    ./box.sh
     exit 0
 }
 
@@ -248,7 +248,7 @@ function start_menu() {
     clear
     red " Runos-Box Linux Supported ONLY"
     green " FROM: https://github.com/Run-os/Runos-Box "
-    green " USE:  wget -O box.sh https://raw.githubusercontent.com/BlueSkyXN/SKY-BOX/main/box.sh && chmod +x box.sh && clear && ./box.sh "
+    green " USE:  wget -O box.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh "
     yellow " =================================================="
     green " 1. 更新系统软件包"
     green " 2. swap修改"
