@@ -12,25 +12,6 @@ cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 # 变量
 docker_data = "/root/data/docker_data"
 
-# 检查是否以 root 用户身份运行
-if [ "$(id -u)" -ne 0 ]; then
-  green "注意！输入密码过程不显示*号属于正常现象"
-  echo "此脚本需要以 root 用户权限运行，请输入当前用户的密码："
-  # 使用 'sudo' 重新以 root 权限运行此脚本
-  sudo -E "$0" "$@"
-  exit $?
-fi
-
-commands=(
-  ["安装Docker"]="install_docker"
-  ["clouddrive2"]="install_clouddrive2"
-  ["Duplicati"]="install_Duplicati"
-  ["GPT-free-api"]="install_GPT-free-api"
-  ["memos"]="install_memos"
-  ["大圣的日常--脚本"]="install_dashen_scripts"
-  ["更新脚本"]="update_scripts"
-)
-
 # 安装并启动Docker
 install_docker() {
   # 检查是否已安装Docker
