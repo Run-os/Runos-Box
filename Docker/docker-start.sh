@@ -204,7 +204,7 @@ function start_menu() {
   green " FROM: https://github.com/Run-os/Runos-Box "
   green " USE:  wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh "
   yellow " =================================================="
-  green " 1. 安装Docker"
+  green " 1. 安装Docker、更换镜像源"
   green " 2. 安装clouddrive2"
   green " 3. 安装Duplicati"
   green " 4. 安装GPT-free-api"
