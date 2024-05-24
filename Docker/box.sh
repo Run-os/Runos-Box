@@ -242,12 +242,14 @@ function start_menu() {
     case "$menuNumberInput" in
     1)
         update_system_packages
+        start_menu
         ;;
     2)
         swapsh
         ;;
     3)
         install_docker
+        start_menu
         ;;
     4)
         install_1panel_on_linux
