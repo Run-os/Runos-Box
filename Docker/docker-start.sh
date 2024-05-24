@@ -191,7 +191,7 @@ install_dashen_scripts() {
 
 # 更新自己
 update_scripts() {
-  wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh
+  wget -O docker-start.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh
   echo "脚本已更新并保存在当前目录 docker-start.sh,现在将执行新脚本。"
   ./docker-start.sh
   exit 0
@@ -202,7 +202,7 @@ function start_menu() {
   clear
   red " Runos-Box Docker-start Linux Supported ONLY"
   green " FROM: https://github.com/Run-os/Runos-Box "
-  green " USE:  wget -O docker-start.sh https://github.moeyy.xyz/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh "
+  green " USE:  wget -O docker-start.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh "
   yellow " =================================================="
   green " 1. 安装Docker、更换镜像源"
   green " 2. 安装clouddrive2"
