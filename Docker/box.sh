@@ -12,6 +12,38 @@ cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 # 变量
 docker_data="/root/data/docker_data"
 
+declare -a menu_options
+declare -A commands
+menu_options=(
+    # ====系统相关====
+    "更新系统软件包"
+    "swap修改"
+    # =====Docker相关=====
+    "安装Docker"
+    "安装1panel面板"
+    "查看1panel用户信息"
+    # =====Nginx相关=====
+    "安装Nginx"
+    "安装Nginx Proxy Manager"
+    "配置openai和groq反代"
+    # =====脚本相关=====
+    "更新脚本"
+    "docker-start.sh脚本"
+)
+
+commands=(
+    ["更新系统软件包"]="update_system_packages"
+    ["swap修改"]="swap_modify"
+    ["安装Docker"]="install_docker"
+    ["安装1panel面板"]="install_1panel_on_linux"
+    ["查看1panel用户信息"]="read_1panel_info"
+    ["安装Nginx Proxy Manager"]="install_nginx_proxy_manager"
+    ["安装Nginx"]="install_nginx"
+    ["配置openai和groq反代"]="configured_openai_groq_reverse_proxy"
+    ["更新脚本"]="update_scripts"
+    ["docker-start.sh脚本"]="docker_start_script"
+)
+
 # 检查是否以 root 用户身份运行
 if [ "$(id -u)" -ne 0 ]; then
     green "注意！输入密码过程不显示*号属于正常现象"
@@ -112,6 +144,17 @@ read_1panel_info() {
     sudo 1pctl user-info
 }
 
+# 安装Nginx
+install_nginx() {
+    if command -v nginx &>/dev/null; then
+        green "已经安装nginx，跳过安装步骤"
+    else
+        red "未安装nginx，开始安装"
+        apt install nginx
+    fi
+    green "Nginx 安装成功"
+}
+
 # 安装Nginx Proxy Manager
 install_nginx_proxy_manager() {
     mkdir -p $docker_data/npm
@@ -136,17 +179,6 @@ EOL
     # 启动Nginx Proxy Manager容器
     docker-compose -f docker-compose.yml up -d
     green "Nginx Proxy Manager 安装成功，请访问 http://你的服务器IP地址:81"
-}
-
-# 安装Nginx
-install_nginx() {
-    if command -v nginx &>/dev/null; then
-        green "已经安装nginx，跳过安装步骤"
-    else
-        red "未安装nginx，开始安装"
-        apt install nginx
-    fi
-    green "Nginx 安装成功"
 }
 
 # 配置openai和groq反代
@@ -225,77 +257,66 @@ update_scripts() {
     exit 0
 }
 
-#主菜单
-function start_menu() {
+show_menu() {
     clear
+    greenline "————————————————————————————————————————————————————"
     red " Runos-Box Linux Supported ONLY"
     green " FROM: https://github.com/Run-os/Runos-Box "
     green " USE:  wget -O box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh "
-    yellow " =================================================="
-    green " 1. 更新系统软件包"
-    green " 2. swap修改"
-    yellow " -----------------Docker相关---------------------"
-    green " 3. 安装Docker、更换镜像源"
-    green " 4. 安装1panel面板管理工具"
-    green " 5. 查看1panel用户信息"
-    yellow " -----------------Nginx相关-----------------------"
-    green " 6. 安装Nginx"
-    green " 7. 安装Nginx Proxy Manager"
-    green " 8. 配置openai和groq反代"
-    yellow " -----------------其他脚本-------------------------"
-    green " 9. docker-start.sh脚本"
-    green " 10. 更新脚本"
-    green " =================================================="
-    green " 0. 退出脚本"
-    echo
-    read -p "请输入数字:" menuNumberInput
-    case "$menuNumberInput" in
-    1)
-        update_system_packages
-        start_menu
-        ;;
-    2)
-        swapsh
-        start_menu
-        ;;
-    3)
-        install_docker
-        start_menu
-        ;;
-    4)
-        install_1panel_on_linux
-        start_menu
-        ;;
-    5)
-        read_1panel_info
-        start_menu
-        ;;
-    6)
-        install_nginx
-        start_menu
-        ;;
-    7)
-        install_nginx_proxy_manager
-        start_menu
-        ;;
-    8)
-        configured_openai_groq_reverse_proxy
-        start_menu
-        ;;
-    9)
-        docker_start_sh
-        ;;
-    10)
-        update_scripts
-        ;;
-    0)
-        exit 1
-        ;;
-    *)
-        clear
-        red "请输入正确数字 !"
-        start_menu
-        ;;
-    esac
+    greenline "————————————————————————————————————————————————————"
+    echo "请选择操作："
+
+    # 特殊处理的项数组
+    special_items=("安装Docker" "安装Nginx" "更新脚本")
+    for i in "${!menu_options[@]}"; do
+        if [[ " ${special_items[*]} " =~ " ${menu_options[i]} " ]]; then
+            # 如果当前项在特殊处理项数组中，使用特殊颜色
+            yellow "=============================================="
+            green "$((i + 1)). ${menu_options[i]}"
+        else
+            # 否则，使用普通格式
+            green "$((i + 1)). ${menu_options[i]}"
+        fi
+    done
 }
-start_menu "first"
+
+handle_choice() {
+    local choice=$1
+    # 检查输入是否为空
+    if [[ -z $choice ]]; then
+        echo -e "${RED}输入不能为空，请重新选择。${NC}"
+        return
+    fi
+
+    # 检查输入是否为数字
+    if ! [[ $choice =~ ^[0-9]+$ ]]; then
+        echo -e "${RED}请输入有效数字!${NC}"
+        return
+    fi
+
+    # 检查数字是否在有效范围内
+    if [[ $choice -lt 1 ]] || [[ $choice -gt ${#menu_options[@]} ]]; then
+        echo -e "${RED}选项超出范围!${NC}"
+        echo -e "${YELLOW}请输入 1 到 ${#menu_options[@]} 之间的数字。${NC}"
+        return
+    fi
+
+    # 执行命令
+    if [ -z "${commands[${menu_options[$choice - 1]}]}" ]; then
+        echo -e "${RED}无效选项，请重新选择。${NC}"
+        return
+    fi
+
+    "${commands[${menu_options[$choice - 1]}]}"
+}
+
+while true; do
+    show_menu
+    read -p "请输入选项的序号(输入q退出): " choice
+    if [[ $choice == 'q' ]]; then
+        break
+    fi
+    handle_choice $choice
+    echo "按任意键继续..."
+    read -n 1 # 等待用户按键
+done
