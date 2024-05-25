@@ -12,7 +12,31 @@ cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 # 变量
 docker_data = "/root/data/docker_data"
 
-# 安装并启动Docker
+declare -a menu_options
+declare -A commands
+menu_options=(
+  # =====Docker相关=====
+  "安装Docker"
+  "安装CloudDrive2"
+  "安装Duplicati"
+  "安装GPT-free-api"
+  "安装memos"
+  # =====脚本相关=====
+  "更新脚本"
+  "安装大圣的日常--脚本"
+)
+
+commands=(
+  ["安装Docker"]="install_docker"
+  ["安装CloudDrive2"]="install_clouddrive2"
+  ["安装Duplicati"]="install_Duplicati"
+  ["安装GPT-free-api"]="install_GPT-free-api"
+  ["安装memos"]="install_memos"
+  ["更新脚本"]="update_scripts"
+  ["安装大圣的日常--脚本"]="install_daily_scripts"
+)
+
+# 安装Docker
 install_docker() {
   # 检查是否已安装Docker
   if command -v docker &>/dev/null; then
@@ -197,61 +221,66 @@ update_scripts() {
   exit 0
 }
 
-#主菜单
-function start_menu() {
+show_menu() {
   clear
-  red " Runos-Box Docker-start Linux Supported ONLY"
+  greenline "————————————————————————————————————————————————————"
+  red " Runos-Box Linux Supported ONLY"
   green " FROM: https://github.com/Run-os/Runos-Box "
-  green " USE:  wget -O docker-start.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh "
-  yellow " =================================================="
-  green " 1. 安装Docker、更换镜像源"
-  green " 2. 安装clouddrive2"
-  green " 3. 安装Duplicati"
-  green " 4. 安装GPT-free-api"
-  green " 5. 安装memos"
-  yellow " --------------以下是其他人的脚本--------------------"
-  green " 6. 大圣的日常-docker轻服务器脚本"
-  green " =================================================="
-  green " 7. 更新脚本"
-  green " 0. 退出脚本"
-  echo
-  read -p "请输入数字:" menuNumberInput
-  case "$menuNumberInput" in
-  1)
-    install_docker
-    start_menu
-    ;;
-  2)
-    install_clouddrive2
-    start_menu
-    ;;
-  3)
-    install_Duplicati
-    start_menu
-    ;;
-  4)
-    install_GPT-free-api
-    start_menu
-    ;;
-  5)
-    install_memos
-    start_menu
-    ;;
+  green " USE:  wget -O docker-start.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh"
+  greenline "————————————————————————————————————————————————————"
+  echo "请选择操作："
 
-  6)
-    install_dashen_scripts
-    ;;
-  7)
-    update_scripts
-    ;;
-  0)
-    exit 1
-    ;;
-  *)
-    clear
-    red "请输入正确数字 !"
-    start_menu
-    ;;
-  esac
+  # 特殊处理的项数组
+  special_items=("安装Docker" "更新脚本")
+  for i in "${!menu_options[@]}"; do
+    if [[ " ${special_items[*]} " =~ " ${menu_options[i]} " ]]; then
+      # 如果当前项在特殊处理项数组中，使用特殊颜色
+      yellow "=============================================="
+      green "$((i + 1)). ${menu_options[i]}"
+    else
+      # 否则，使用普通格式
+      green "$((i + 1)). ${menu_options[i]}"
+    fi
+  done
 }
-start_menu "first"
+
+handle_choice() {
+  local choice=$1
+  # 检查输入是否为空
+  if [[ -z $choice ]]; then
+    echo -e "${RED}输入不能为空，请重新选择。${NC}"
+    return
+  fi
+
+  # 检查输入是否为数字
+  if ! [[ $choice =~ ^[0-9]+$ ]]; then
+    echo -e "${RED}请输入有效数字!${NC}"
+    return
+  fi
+
+  # 检查数字是否在有效范围内
+  if [[ $choice -lt 1 ]] || [[ $choice -gt ${#menu_options[@]} ]]; then
+    echo -e "${RED}选项超出范围!${NC}"
+    echo -e "${YELLOW}请输入 1 到 ${#menu_options[@]} 之间的数字。${NC}"
+    return
+  fi
+
+  # 执行命令
+  if [ -z "${commands[${menu_options[$choice - 1]}]}" ]; then
+    echo -e "${RED}无效选项，请重新选择。${NC}"
+    return
+  fi
+
+  "${commands[${menu_options[$choice - 1]}]}"
+}
+
+while true; do
+  show_menu
+  read -p "请输入选项的序号(输入q退出): " choice
+  if [[ $choice == 'q' ]]; then
+    break
+  fi
+  handle_choice $choice
+  echo "按任意键继续..."
+  read -n 1 # 等待用户按键
+done
