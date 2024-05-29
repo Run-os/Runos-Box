@@ -198,7 +198,7 @@ EOL
 install_memos() {
   read -p "-----------------
   1. 安装最新版本memos
-  2. 安装适配inbox的memos版本
+  2. 安装 $menu_options 版本的memos(适配inbox)
   请输入序号：" answer
 
   if [ "$answer" -eq 1 ]; then
