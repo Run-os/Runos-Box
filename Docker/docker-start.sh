@@ -10,8 +10,8 @@ highlight() { echo -e "\033[32m\033[01m$1\033[0m"; }
 cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
-docker_data = "/root/data/docker_data"
-memos_version = "0.20.1"
+export docker_data = "/root/data/docker_data"
+export memos_version = "0.20.1"
 
 declare -a menu_options
 declare -A commands
@@ -198,7 +198,7 @@ EOL
 install_memos() {
   read -p "-----------------
   1. 安装最新版本memos
-  2. 安装适配inbox的memos版本
+  2. 安装适配inbox的memos版本 $memos_version
   请输入序号：" answer
 
   if [ "$answer" -eq 1 ]; then
@@ -208,7 +208,7 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume ${docker_data}/memos/:/var/opt/memos \
+      --volume $docker_data/memos/:/var/opt/memos \
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
@@ -230,7 +230,7 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume ${docker_data}/memos/:/var/opt/memos \
+      --volume $docker_data/memos/:/var/opt/memos \
       neosmemo/memos:$memos_version \
       --port 5230
     green "memos $memos_version 安装成功，请访问 http://你的服务器IP地址:5230"
