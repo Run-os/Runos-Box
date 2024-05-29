@@ -282,9 +282,9 @@ docker_start_sh() {
 
 # 更新自己
 update_scripts() {
-    wget -O box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh
-    echo "脚本已更新并保存在当前目录 box.sh,现在将执行新脚本。"
-    ./box.sh
+    wget -O docker-box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh
+    echo "脚本已更新并保存在当前目录 docker-box.sh,现在将执行新脚本。"
+    ./docker-box.sh
     exit 0
 }
 
@@ -294,7 +294,7 @@ show_menu() {
     greenline "————————————————————————————————————————————————————"
     red " Runos-Box Linux Supported ONLY"
     green " FROM: https://github.com/Run-os/Runos-Box "
-    green " USE:  wget -O box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/box.sh && chmod +x box.sh && clear && ./box.sh "
+    green " USE:  wget -O docker-box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh "
     greenline "————————————————————————————————————————————————————"
     echo "请选择操作："
 
