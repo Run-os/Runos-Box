@@ -198,7 +198,7 @@ EOL
 install_memos() {
   read -p "-----------------
   1. 安装最新版本memos
-  2. 安装 $memos_version 版本的memos(适配inbox)
+  2. 安装 ${memos_version} 版本的memos(适配inbox)
   请输入序号：" answer
 
   if [ "$answer" -eq 1 ]; then
@@ -208,11 +208,11 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume $docker_data/memos/:/var/opt/memos \
+      --volume ${docker_data}/memos/:/var/opt/memos \
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
-    green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
+    green "注意：memos文件保存在 ${docker_data}/memos 文件夹下。"
   fi
 
   if [ "$answer" -eq 2 ]; then
@@ -224,18 +224,24 @@ install_memos() {
       green "memos 容器不存在，可以安装"
     fi
     # 安装适配inbox的memos版本
-    green "正在拉取 $memos_version 版本的memos镜像..."
+    green "正在拉取 ${memos_version} 版本的memos镜像..."
     docker run \
       --name memos \
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume $docker_data/memos/:/var/opt/memos \
-      neosmemo/memos:$memos_version \
+      --volume ${docker_data}/memos/:/var/opt/memos \
+      neosmemo/memos:${memos_version} \
       --port 5230
-    green "memos $memos_version 安装成功，请访问 http://你的服务器IP地址:5230"
-    green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
+    green "memos ${memos_version} 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 ${docker_data}/memos 文件夹下。"
   fi
+
+  if [ "$answer" -ne 1 ] && [ "$answer" -ne 2 ]; then
+    echo -e "${RED}请输入有效数字!${NC}"
+    return
+  fi
+
 }
 
 # 安装大圣的日常--脚本
