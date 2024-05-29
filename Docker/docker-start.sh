@@ -11,6 +11,7 @@ cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
 docker_data = "/root/data/docker_data"
+memos_version = "0.20.1"
 
 declare -a menu_options
 declare -A commands
@@ -197,7 +198,7 @@ EOL
 install_memos() {
   read -p "-----------------
   1. 安装最新版本memos
-  2. 安装 0.18 版本的memos(inbox同步适配)
+  2. 安装适配inbox的memos版本
   请输入序号：" answer
 
   if [ "$answer" -eq 1 ]; then
@@ -207,26 +208,26 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume /root/data/docker_data/memos/:/var/opt/memos \
+      --volume $commands/memos/:/var/opt/memos \
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
-    green "注意：memos文件保存在 /root/data/docker_data/memos 文件夹下。"
+    green "注意：memos文件保存在 $commands/memos 文件夹下。"
   fi
 
   if [ "$answer" -eq 2 ]; then
-    # 安装0.18版本的memos
-    green "正在拉取 0.18 版本的memos镜像..."
+    # 安装适配inbox的memos版本
+    green "正在拉取 $menu_options 版本的memos镜像..."
     docker run \
       --name memos \
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume /root/data/docker_data/memos/:/var/opt/memos \
-      neosmemo/memos:0.18 \
+      --volume $commands/memos/:/var/opt/memos \
+      neosmemo/memos:$menu_options \
       --port 5230
-    green "memos 0.18 安装成功，请访问 http://你的服务器IP地址:5230"
-    green "注意：memos文件保存在 /root/data/docker_data/memos 文件夹下。"
+    green "memos $menu_options 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 $commands/memos 文件夹下。"
   fi
 }
 
