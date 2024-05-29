@@ -213,7 +213,9 @@ install_memos() {
 
   if [ "$answer" -eq 2 ]; then
     # 安装v0.18版本的memos
+    green "正在拉去0.18版本的memos镜像..."
     docker pull neosmemo/memos:0.18
+    green "正在启动0.18版本的memos..."
     docker run \
       --name memos \
       --publish 5230:5230 \
