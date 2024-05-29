@@ -10,6 +10,7 @@ highlight() { echo -e "\033[32m\033[01m$1\033[0m"; }
 cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
+## 注意⚠️：等于号=的两边不能有空格，否则就不会识别为变量
 docker_data="/root/data/docker_data"
 memos_version="0.20.1"
 
