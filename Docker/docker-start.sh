@@ -210,6 +210,7 @@ install_memos() {
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
   fi
 
   if [ "$answer" -eq 2 ]; then
@@ -223,6 +224,7 @@ install_memos() {
       ghcr.io/usememos/memos:0.18 \
       --port 5230
     green "memos 0.18 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
   fi
 }
 
