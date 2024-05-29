@@ -288,6 +288,7 @@ update_scripts() {
     exit 0
 }
 
+# 显示菜单
 show_menu() {
     clear
     greenline "————————————————————————————————————————————————————"
@@ -311,6 +312,7 @@ show_menu() {
     done
 }
 
+# 执行命令
 handle_choice() {
     local choice=$1
     # 检查输入是否为空
