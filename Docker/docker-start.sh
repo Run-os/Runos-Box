@@ -220,7 +220,7 @@ install_memos() {
       --name memos \
       --publish 5230:5230 \
       --volume /root/.memos/:/var/opt/memos \
-      neosmemo/memos:0.18 --mode prod \
+      ghcr.io/usememos/memos:0.18 \
       --port 5230
     green "memos v0.18 安装成功，请访问 http://你的服务器IP地址:5230"
   fi
