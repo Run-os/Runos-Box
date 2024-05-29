@@ -43,7 +43,7 @@ commands=(
     ["配置openai和groq反代"]="configured_openai_groq_reverse_proxy"
     ["配置notion反代"]="configured_notion_reverse_proxy"
     ["更新脚本"]="update_scripts"
-    ["docker-start.sh脚本"]="docker_start_script"
+    ["docker-start.sh脚本"]="docker_start_sh"
 )
 
 # 检查是否以 root 用户身份运行
