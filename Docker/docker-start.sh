@@ -216,6 +216,13 @@ install_memos() {
   fi
 
   if [ "$answer" -eq 2 ]; then
+    if docker ps --filter "name=memos" --format "{{.Names}}" | grep -q "memos"; then
+      docker stop memos
+      docker rm memos
+      green "memos 容器已存在，已停止并删除原容器"
+    else
+      green "memos 容器不存在，可以安装"
+    fi
     # 安装适配inbox的memos版本
     green "正在拉取 $menu_options 版本的memos镜像..."
     docker run \
