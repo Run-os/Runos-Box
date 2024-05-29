@@ -204,6 +204,7 @@ install_memos() {
     # 安装最新版本memos
     docker run \
       --name memos \
+      -d \
       --publish 5230:5230 \
       --restart unless-stopped \
       --volume $docker_data/memos:/var/opt/memos \
@@ -218,6 +219,7 @@ install_memos() {
     green "正在拉取 0.18 版本的memos镜像..."
     docker run \
       --name memos \
+      -d \
       --publish 5230:5230 \
       --restart unless-stopped \
       --volume $docker_data/memos:/var/opt/memos \
