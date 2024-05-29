@@ -195,7 +195,8 @@ EOL
 
 # 安装memos
 install_memos() {
-  read -p "1. 安装最新版本memos
+  read -p "-----------------
+  1. 安装最新版本memos
   2. 安装v0.18版本的memos(inbox同步适配)
   请输入序号：" answer
 
@@ -216,7 +217,7 @@ install_memos() {
       --name memos \
       --publish 5230:5230 \
       --volume /root/.memos/:/var/opt/memos \
-      neosmemo/memos:v0.18 --mode prod \
+      neosmemo/memos:0.18 --mode prod \
       --port 5230
     green "memos v0.18 安装成功，请访问 http://你的服务器IP地址:5230"
   fi
