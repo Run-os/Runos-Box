@@ -213,6 +213,7 @@ install_memos() {
 
   if [ "$answer" -eq 2 ]; then
     # 安装v0.18版本的memos
+    docker pull neosmemo/memos:0.18
     docker run \
       --name memos \
       --publish 5230:5230 \
