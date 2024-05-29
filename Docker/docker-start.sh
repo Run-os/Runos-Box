@@ -207,7 +207,7 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume /roor/data/docker_data/memos:/var/opt/memos \
+      --volume /roor/data/docker_data/memos/:/var/opt/memos \
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
@@ -222,7 +222,7 @@ install_memos() {
       -d \
       --publish 5230:5230 \
       --restart unless-stopped \
-      --volume /roor/data/docker_data/memos:/var/opt/memos \
+      --volume /roor/data/docker_data/memos/:/var/opt/memos \
       neosmemo/memos:0.18 \
       --port 5230
     green "memos 0.18 安装成功，请访问 http://你的服务器IP地址:5230"
