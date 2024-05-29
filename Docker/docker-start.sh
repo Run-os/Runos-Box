@@ -197,7 +197,7 @@ EOL
 install_memos() {
   read -p "-----------------
   1. 安装最新版本memos
-  2. 安装v0.18版本的memos(inbox同步适配)
+  2. 安装 0.18 版本的memos(inbox同步适配)
   请输入序号：" answer
 
   if [ "$answer" -eq 1 ]; then
@@ -213,10 +213,8 @@ install_memos() {
   fi
 
   if [ "$answer" -eq 2 ]; then
-    # 安装v0.18版本的memos
-    green "正在拉去0.18版本的memos镜像..."
-    docker pull neosmemo/memos:0.18
-    green "正在启动0.18版本的memos..."
+    # 安装0.18版本的memos
+    green "正在拉取 0.18 版本的memos镜像..."
     docker run \
       --name memos \
       --publish 5230:5230 \
@@ -224,7 +222,7 @@ install_memos() {
       --volume /root/.memos/:/var/opt/memos \
       ghcr.io/usememos/memos:0.18 \
       --port 5230
-    green "memos v0.18 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "memos 0.18 安装成功，请访问 http://你的服务器IP地址:5230"
   fi
 }
 
