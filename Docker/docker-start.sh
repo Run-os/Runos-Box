@@ -205,6 +205,7 @@ install_memos() {
     docker run \
       --name memos \
       --publish 5230:5230 \
+      --restart unless-stopped \
       --volume /root/.memos/:/var/opt/memos \
       neosmemo/memos --mode prod \
       --port 5230
@@ -219,6 +220,7 @@ install_memos() {
     docker run \
       --name memos \
       --publish 5230:5230 \
+      --restart unless-stopped \
       --volume /root/.memos/:/var/opt/memos \
       ghcr.io/usememos/memos:0.18 \
       --port 5230
