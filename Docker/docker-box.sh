@@ -205,7 +205,7 @@ server {
     }
 }
 EOL
-    green "openai反代配置文件完成"
+    green "openai反代配置文件完成，端口为 84"
     # groq
     sudo tee /etc/nginx/conf.d/groq.conf <<'EOL'
 server {
@@ -229,7 +229,7 @@ server {
 	}
 }
 EOL
-    green "groq反代配置文件完成"
+    green "groq反代配置文件完成，端口为 88"
     green "重启Nginx..."
     sudo nginx -s stop
     sudo nginx
@@ -256,7 +256,7 @@ server {
     }
 }
 EOL
-    green "notion反代配置文件完成"
+    green "notion反代配置文件完成，端口为 82"
     green "重启Nginx..."
     sudo nginx -s stop
     sudo nginx
