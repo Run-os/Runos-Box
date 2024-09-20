@@ -18,10 +18,15 @@ menu_options=(
     # ====系统相关====
     "更新系统软件包"
     "swap修改"
-    # =====Docker相关=====
+    # =====Docker安装=====
     "安装Docker"
     "安装1panel面板"
     "查看1panel用户信息"
+    # =====Docker容器相关=====
+    "安装CloudDrive2"
+    "安装Duplicati"
+    "安装GPT-free-api"
+    "安装memos"
     # =====Nginx相关=====
     "安装Nginx"
     "安装Nginx Proxy Manager"
@@ -29,7 +34,7 @@ menu_options=(
     "配置notion反代"
     # =====脚本相关=====
     "更新脚本"
-    "docker-start.sh脚本"
+    "安装大圣的日常--脚本"
 )
 
 commands=(
@@ -43,7 +48,12 @@ commands=(
     ["配置openai和groq反代"]="configured_openai_groq_reverse_proxy"
     ["配置notion反代"]="configured_notion_reverse_proxy"
     ["更新脚本"]="update_scripts"
-    ["docker-start.sh脚本"]="docker_start_sh"
+    ["安装Docker"]="install_docker"
+    ["安装CloudDrive2"]="install_clouddrive2"
+    ["安装Duplicati"]="install_Duplicati"
+    ["安装GPT-free-api"]="install_GPT-free-api"
+    ["安装memos"]="install_memos"
+    ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
 
 # 检查是否以 root 用户身份运行
@@ -144,6 +154,161 @@ install_1panel_on_linux() {
 # 查看1panel用户信息
 read_1panel_info() {
     sudo 1pctl user-info
+}
+
+# clouddrive2
+install_clouddrive2() {
+  sudo mkdir -p /etc/systemd/system/docker.service.d/
+  sudo cat <<EOF >/etc/systemd/system/docker.service.d/clear_mount_propagation_flags.conf
+[Service]
+MountFlags=shared
+EOF
+  sudo systemctl restart docker.service
+  # 安装clouddrive2
+  docker run -d \
+    --name clouddrive2 \
+    --restart unless-stopped \
+    --env CLOUDDRIVE_HOME=/Config \
+    -v /home/clouddrive/shared:/CloudNAS:shared \
+    -v /home/clouddrive/Config:/Config \
+    -v /home/clouddrive/media/shared:/media:shared \
+    -p:19798:19798 \
+    --privileged \
+    --device /dev/fuse:/dev/fuse \
+    cloudnas/clouddrive2
+  green "clouddrive2 安装成功，请访问 http://你的服务器IP地址:19798"
+}
+
+
+# 安装Duplicati
+install_Duplicati() {
+  mkdir -p $docker_data/duplicati
+  cd $docker_data/duplicati
+  # 创建docker-compose文件
+
+  cat >docker-compose.yml <<'EOL'
+version: "3"
+services:
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Shanghai
+    volumes:
+      - /root/data/docker_data/duplicati/config:/config
+      - /root/data/docker_data/duplicati/backups:/backups
+      ###- /root/data:/source
+      - /:/source  #这个地方我直接映射根目录，这样什么文件就都可以备份了
+    ports:
+      - 8080:8200
+    restart: unless-stopped
+EOL
+
+  # 启动容器
+  docker-compose -f docker-compose.yml up -d
+  green "Duplicati 安装成功，请访问 http://你的服务器IP地址:8080"
+}
+
+# 安装GPT-free-api
+install_GPT-free-api() {
+  mkdir -p $docker_data/gpt-free-api
+  cd $docker_data/gpt-free-api
+  # 创建docker-compose文件
+  cat >docker-compose.yml <<'EOL'
+version: '3'
+services:
+# 月之暗面Kimi
+  kimi-free-api:
+    container_name: kimi-free-api
+    image: vinlic/kimi-free-api:latest
+    hostname: kimifree
+    restart: always
+    ports:
+      - "10013:8000" #10013可以修改，8000不可以修改
+    expose:
+      - "8000"
+    environment:
+      - TZ=Asia/Shanghai
+# 智谱清言GLM4
+  glm-free-api:
+    container_name: glm-free-api
+    hostname: glmfree
+    image: vinlic/glm-free-api:latest
+    restart: always
+    ports:
+      - "10015:8000"  #10015可以修改，8000不可以修改
+    expose:
+      - "8000"
+    environment:
+      - TZ=Asia/Shanghai
+# 通义千问Qwen-Max
+  qwen-free-api:
+    container_name: qwen-free-api
+    hostname: qwenfree
+    image: vinlic/qwen-free-api:latest
+    restart: always
+    ports:
+      - "10016:8000"  #10016可以修改，8000不可以修改
+    expose:
+      - "8000"
+    environment:
+      - TZ=Asia/Shanghai
+EOL
+  # 启动容器
+  docker-compose -f docker-compose.yml up -d
+  green "GPT-free-api 安装成功，kimi: http://你的服务器IP地址:10013, glm: http://你的服务器IP地址:10015, qwen: http://你的服务器IP地址:10016"
+}
+
+# 安装memos
+install_memos() {
+  read -p "-----------------
+  1. 安装最新版本memos
+  2. 安装 $memos_version 版本的memos(适配inbox) 
+  请输入序号：" answer
+
+  if [ "$answer" -eq 1 ]; then
+    # 安装最新版本memos
+    docker run \
+      --name memos \
+      -d \
+      --publish 5230:5230 \
+      --restart unless-stopped \
+      --volume $docker_data/memos/:/var/opt/memos \
+      neosmemo/memos --mode prod \
+      --port 5230
+    green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
+  fi
+
+  if [ "$answer" -eq 2 ]; then
+    if docker ps | grep -q "memos"; then
+      docker stop memos
+      docker rm memos
+      green "memos 容器已存在，已停止并删除原容器"
+    else
+      green "memos 容器不存在，可以安装"
+    fi
+    # 安装适配inbox的memos版本
+    green "正在拉取 $memos_version 版本的memos镜像..."
+    docker run \
+      --name memos \
+      -d \
+      --publish 5230:5230 \
+      --restart unless-stopped \
+      --volume $docker_data/memos/:/var/opt/memos \
+      neosmemo/memos:$memos_version \
+      --port 5230
+    green "memos $memos_version 安装成功，请访问 http://你的服务器IP地址:5230"
+    green "注意：memos文件保存在 $docker_data/memos/ 文件夹下。"
+  fi
+
+  if [ "$answer" -ne 1 ] && [ "$answer" -ne 2 ]; then
+    echo -e "${RED}请输入有效数字!${NC}"
+    return
+  fi
+
 }
 
 # 安装Nginx
@@ -264,7 +429,7 @@ EOL
 
 # swap修改
 swapsh() {
-    wget -O "/root/swap.sh" "https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/swap.sh" --no-check-certificate -T 30 -t 5 -d
+    wget -O "/root/swap.sh" "https://ghp.ci/https://raw.githubusercontent.com/BlueSkyXN/ChangeSource/master/swap.sh" --no-check-certificate -T 30 -t 5 -d
     chmod +x "/root/swap.sh"
     chmod 777 "/root/swap.sh"
     blue "下载完成"
@@ -272,20 +437,21 @@ swapsh() {
     bash "/root/swap.sh"
 }
 
-# docker-start.sh脚本
-docker_start_sh() {
-    wget -O docker-start.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-start.sh && chmod +x docker-start.sh && clear && ./docker-start.sh
-    echo "脚本已更新并保存在当前目录 docker-start.sh,现在将执行新脚本。"
-    ./docker-start.sh
-    exit 0
-}
-
 # 更新自己
 update_scripts() {
-    wget -O docker-box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh
+    wget -O docker-box.sh https://ghp.ci/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh
     echo "脚本已更新并保存在当前目录 docker-box.sh,现在将执行新脚本。"
     ./docker-box.sh
     exit 0
+}
+
+# 安装大圣的日常--脚本
+install_dashen_scripts() {
+  # 下载脚本
+  wget -qO pi.sh https://cafe.cpolar.cn/wkdaily/zero3/raw/branch/main/zero3/pi.sh && chmod +x pi.sh && ./pi.sh
+  green "脚本已经下载到当前目录，现在将执行新脚本。"
+  ./pi.sh
+  exit 0
 }
 
 # 显示菜单
@@ -294,7 +460,7 @@ show_menu() {
     greenline "————————————————————————————————————————————————————"
     red " Runos-Box Linux Supported ONLY"
     green " FROM: https://github.com/Run-os/Runos-Box "
-    green " USE:  wget -O docker-box.sh https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh "
+    green " USE:  wget -O docker-box.sh https://ghp.ci/https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod +x docker-box.sh && clear && ./docker-box.sh "
     greenline "————————————————————————————————————————————————————"
     echo "请选择操作："
 
