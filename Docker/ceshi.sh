@@ -20,3 +20,5 @@ green "$variable" # 输出: Hello World
 
     green "memos $memos_version 安装成功，请访问 http://你的服务器IP地址:5230"
     echo " 注意：memos文件保存在 " + "$docker_data" + "/roor/data/docker_data/memos/ 文件夹下。"
+
+
