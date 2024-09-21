@@ -163,6 +163,7 @@ install_clouddrive2() {
 [Service]
 MountFlags=shared
 EOF
+  sudo systemctl daemon-reload
   sudo systemctl restart docker.service
   # 安装clouddrive2
   docker run -d \
