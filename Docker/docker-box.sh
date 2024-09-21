@@ -24,6 +24,7 @@ menu_options=(
     "查看1panel用户信息"
     # =====Docker容器相关=====
     "安装CloudDrive2"
+    "安装CloudDrive2--fnOS专属"
     "安装Duplicati"
     "安装GPT-free-api"
     "安装memos"
@@ -50,6 +51,7 @@ commands=(
     ["更新脚本"]="update_scripts"
     ["安装Docker"]="install_docker"
     ["安装CloudDrive2"]="install_clouddrive2"
+    ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
     ["安装GPT-free-api"]="install_GPT-free-api"
     ["安装memos"]="install_memos"
@@ -178,6 +180,31 @@ EOF
     --device /dev/fuse:/dev/fuse \
     cloudnas/clouddrive2
   green "clouddrive2 安装成功，请访问 http://你的服务器IP地址:19798"
+}
+
+# clouddrive2--fnOS专属
+install_clouddrive2_fnos() {
+  sudo mkdir -p /etc/systemd/system/docker.service.d/
+  sudo cat <<EOF >/etc/systemd/system/docker.service.d/clear_mount_propagation_flags.conf
+[Service]
+MountFlags=shared
+EOF
+  sudo systemctl daemon-reload
+  sudo systemctl restart docker.service
+  # 安装clouddrive2
+  docker run -d \
+    --name clouddrive2 \
+    --restart unless-stopped \
+    --env CLOUDDRIVE_HOME=/Config \
+    -v /vol1/1000/Clouddrive/shared:/CloudNAS:shared \
+    -v /vol1/1000/Clouddrive/Config:/Config \
+    -v /vol1/1000/Clouddrive/media/shared:/media:shared \
+    -p:19798:19798 \
+    --privileged \
+    --device /dev/fuse:/dev/fuse \
+    cloudnas/clouddrive2
+  green "clouddrive2 安装成功，请访问 http://你的服务器IP地址:19798"
+
 }
 
 
