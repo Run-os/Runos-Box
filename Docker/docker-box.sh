@@ -32,7 +32,6 @@ menu_options=(
     "安装Nginx"
     "安装Nginx Proxy Manager"
     "配置openai和groq反代"
-    "配置notion反代"
     # =====脚本相关=====
     "更新脚本"
     "安装大圣的日常--脚本"
@@ -47,7 +46,6 @@ commands=(
     ["安装Nginx Proxy Manager"]="install_nginx_proxy_manager"
     ["安装Nginx"]="install_nginx"
     ["配置openai和groq反代"]="configured_openai_groq_reverse_proxy"
-    ["配置notion反代"]="configured_notion_reverse_proxy"
     ["更新脚本"]="update_scripts"
     ["安装Docker"]="install_docker"
     ["安装CloudDrive2"]="install_clouddrive2"
@@ -428,32 +426,6 @@ EOL
     sudo nginx
 }
 
-# 配置notion反代
-configured_notion_reverse_proxy() {
-    green "配置notion反代"
-    sudo tee /etc/nginx/conf.d/notion.conf <<'EOL'
-server {
-	listen 82;
-    location / {
-        proxy_pass https://www.notion.so/;
-        proxy_ssl_server_name on;
-        proxy_set_header Host www.notion.so;
-        proxy_set_header Connection '';
-        proxy_http_version 1.1;
-        chunked_transfer_encoding off;
-        proxy_buffering off;
-        proxy_cache off;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-EOL
-    green "notion反代配置文件完成，端口为 82"
-    green "重启Nginx..."
-    sudo nginx -s stop
-    sudo nginx
-}
 
 # swap修改
 swapsh() {
