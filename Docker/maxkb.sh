@@ -1,11 +1,10 @@
 #!/bin/bash
-
 # 变量
 docker_data="/vol1/1000/Docker"
-container= "maxkb"
+container="maxkb"
 
 # 定义要写入的文本
-text=$(cat <<EOF
+text="""
 networks:
     1panel-network:
         external: true
@@ -28,14 +27,15 @@ services:
         volumes:
             - $docker_data/$container/data:/var/lib/postgresql/data
             - $docker_data/$container/python-packages:/opt/maxkb/app/sandbox/python-packages
-EOF
-)
+"""
 
-# 将文本写入文件
-echo "$text" | sudo tee $docker_data/$container/docker-compose.yml > /dev/null
-
-$ 运行容器
+# 运行容器
 mkdir -p $docker_data/$container/
 cd $docker_data/$container/
-docker-compose up -d
 
+# 将文本写入文件
+cat > $docker_data/$container/docker-compose.yml << EOF
+$text
+EOF
+
+docker-compose up -d
