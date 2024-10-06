@@ -7,7 +7,7 @@ container="clash"
 sudo mkdir -p $docker_data/$container/svc-clash
 
 # test
-config=$(
+config=$(cat <<'EOF'
 # config.yaml
 port: 7890
 socks-port: 7891
@@ -16,17 +16,18 @@ mode: Rule
 log-level: silent
 external-controller: 0.0.0.0:9090
 secret: "123456"
+EOF
 )
 
-compose=$(
+compose=$(cat <<'EOF'
 # docker-compose.yml
 version: "3"
 
 services:
   # Clash
-  svc-clash:
-    image: dreamacro/clash
-    container_name: svc-clash
+  clash:
+    image: laoyutang/clash-and-dashboard:latest
+    container_name: clash
     volumes:
       - ./svc-clash/config.yaml:/root/.config/clash/config.yaml
     ports:
@@ -36,21 +37,13 @@ services:
     restart: always
     networks:
       - default
-  # Clash Dashboard
-  svc-clash-dashboard:
-    image: centralx/clash-dashboard
-    container_name: svc-clash-dashboard
-    ports:
-      - "12345:80"
-    restart: always
-    networks:
-      - default
 
 # Networks
 networks:
   default:
     driver: bridge
     name: svc
+EOF
 )
 
 # 配置文件

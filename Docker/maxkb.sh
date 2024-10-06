@@ -4,7 +4,7 @@ docker_data="/vol1/1000/Docker"
 container="maxkb"
 
 # 定义要写入的文本
-text=$(
+text=$(cat <<'EOF'
 networks:
     1panel-network:
         external: true
@@ -27,6 +27,7 @@ services:
         volumes:
             - $docker_data/$container/data:/var/lib/postgresql/data
             - $docker_data/$container/python-packages:/opt/maxkb/app/sandbox/python-packages
+EOF
 )
 
 # 运行容器
