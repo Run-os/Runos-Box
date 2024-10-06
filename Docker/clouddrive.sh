@@ -11,6 +11,8 @@ MountFlags=shared
 EOF
 sudo systemctl restart docker.service
 
+
+sudo mkdir -p $docker_data/$container
 compose=$(cat <<'EOF'
 # docker-compose.yml
 version: "2.1"
