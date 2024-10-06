@@ -29,7 +29,7 @@ services:
       - /vol1/1000/Clouddrive/media/shared:/media:shared #optional media path of host
     devices:
       - /dev/fuse:/dev/fuse
-    restart: unless-stopped
+    restart: always
     pid: "host"
     privileged: true
     network_mode: "host"
