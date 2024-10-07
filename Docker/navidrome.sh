@@ -10,6 +10,7 @@ compose=$(cat <<'EOF'
 version: "3"
 services:
   navidrome:
+    container_name: navidrome
     image: deluan/navidrome:develop
     ports:
       - "4533:4533"
