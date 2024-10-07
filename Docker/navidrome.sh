@@ -29,7 +29,7 @@ services:
       ND_ENABLESHARING: "true"
     volumes:
       - "/vol1/1000/Docker/navidrome/data:/data"
-      - "/vol1/1000/Docker/navidrome/music:/music:ro"
+      - "/vol1/1000/Music:/music:ro"
 
 EOF
 )
