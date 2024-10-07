@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # 变量
-docker_data="/vol1/1000/Docker"
-container="navidrome"
+container_data="/vol1/1000/Docker/navidrome"
 
-sudo mkdir -p $docker_data/$container
+sudo mkdir -p $container_data
 
 compose=$(cat <<'EOF'
 # docker-compose.yml
@@ -36,10 +35,10 @@ EOF
 )
 
 # docker-compose
-sudo cat <<EOF > $docker_data/$container/docker-compose.yml
+sudo cat <<EOF > $container_data/docker-compose.yml
 $compose
 EOF
 
-cd $docker_data/$container
+cd $container_data
 sudo docker-compose up -d
 

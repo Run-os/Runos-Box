@@ -1,7 +1,6 @@
 #!/bin/bash
 # 变量
-docker_data="/vol1/1000/Docker"
-container="maxkb"
+container_data="/vol1/1000/Docker/maxkb"
 
 # 定义要写入的文本
 text=$(cat <<'EOF'
@@ -10,32 +9,27 @@ networks:
         external: true
 services:
     maxkb:
-        container_name: \${CONTAINER_NAME}
-        deploy:
-            resources:
-                limits:
-                    cpus: \${CPUS}
-                    memory: \${MEMORY_LIMIT}
+        container_name: maxkb
         image: 1panel/maxkb:v1.6.1
         labels:
             createdBy: Apps
         networks:
             - 1panel-network
         ports:
-            - \${HOST_IP}:\${PANEL_APP_PORT_HTTP}:8080
-        restart: unless-stopped
+            - 8080:8080
+        restart: always
         volumes:
-            - $docker_data/$container/data:/var/lib/postgresql/data
-            - $docker_data/$container/python-packages:/opt/maxkb/app/sandbox/python-packages
+            - /vol1/1000/Docker/maxkb/data:/var/lib/postgresql/data
+            - /vol1/1000/Docker/maxkb/python-packages:/opt/maxkb/app/sandbox/python-packages
 EOF
 )
 
 # 运行容器
-mkdir -p $docker_data/$container/
-cd $docker_data/$container/
+mkdir -p $container_data
+cd $container_data
 
 # 将文本写入文件
-cat > $docker_data/$container/docker-compose.yml << EOF
+cat > $container_data/docker-compose.yml << EOF
 $text
 EOF
 
