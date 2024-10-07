@@ -13,8 +13,8 @@ services:
   navidrome:
     image: deluan/navidrome:develop
     ports:
-      - "14533:4533"
-    restart: unless-stopped
+      - "4533:4533"
+    restart: always
     environment:
       ND_SCANSCHEDULE: 0
       ND_LOGLEVEL: info
