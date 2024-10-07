@@ -30,7 +30,7 @@ services:
     image: xhongc/music_tag_web:latest
     container_name: music-tag-web
     ports:
-      - "8001:8001"                                    #端口号改成喜欢的
+      - "4534:8001"                                    #端口号改成喜欢的
     volumes:
       - "/vol1/1000/Docker/music-tag/data:/app/data"    #docker路径，创建好目录文件照搬即可
       - "/vol1/1000/Music:/app/media:rw"     #改，"曲库目录:/app/media:rw"
