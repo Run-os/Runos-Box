@@ -123,12 +123,16 @@ install_docker() {
         tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": [
-    "https://docker.ketches.cn",
-    "https://hub.uuuadc.top",
-    "https://docker.anyhub.us.kg",
-    "https://dockerhub.jobcher.com",
-    "https://docker.ckyl.me",
-    "https://docker.awsl9527.cn"
+    "https://docker.hpcloud.cloud",
+    "https://docker.m.daocloud.io",
+    "https://docker.unsee.tech",
+    "https://docker.1panel.live",
+    "http://mirrors.ustc.edu.cn",
+    "https://docker.chenby.cn",
+    "http://mirror.azure.cn",
+    "https://dockerpull.org",
+    "https://dockerhub.icu",
+    "https://hub.rat.dev"
   ],
   "live-restore": true
 }
