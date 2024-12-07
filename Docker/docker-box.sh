@@ -300,7 +300,7 @@ install_rsspush() {
   cd $docker_data/rsspush
   # 创建docker-compose文件
   cat >docker-compose.yml <<'EOL'
-  version: '3'
+# version: '3'
 services:
   rsspush:
     image: easychen/rsspush
@@ -341,7 +341,7 @@ install_nginx_proxy_manager() {
     # 创建docker-compose文件
 
     cat >docker-compose.yml <<'EOL'
-version: '3'
+# version: '3'
 services:
   app:
     image: 'chishin/nginx-proxy-manager-zh:latest'
