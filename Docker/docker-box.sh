@@ -311,7 +311,7 @@ services:
       - RSS_BASE=http://rsshub:1200
       - TZ=Asia/Chongqing
     ports:
-      - 8000:8000
+      - 8003:8000
   rsshub:
     image: diygod/rsshub
     ports:
@@ -320,7 +320,7 @@ EOL
   
     # 启动容器
     docker-compose -f docker-compose.yml up -d
-    green "RSSPush 安装成功，请访问 http://你的服务器IP地址:8000"
+    green "RSSPush 安装成功，请访问 http://你的服务器IP地址:8003"
   }
 
 # 安装Nginx
