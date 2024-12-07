@@ -27,7 +27,7 @@ menu_options=(
     "安装CloudDrive2--fnOS专属"
     "安装Duplicati"
     "安装memos"
-    "安装nextchat"
+    "安装RSSPush"
     # =====Nginx相关=====
     "安装Nginx"
     "安装Nginx Proxy Manager"
@@ -52,7 +52,7 @@ commands=(
     ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
     ["安装memos"]="install_memos"
-    ["安装nextchat"]="install_nextchat"
+    ["安装RSSPush"]="install_rsspush"
     ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
 
@@ -123,11 +123,12 @@ install_docker() {
         tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": [
-    "https://0b27f0a81a00f3560fbdc00ddd2f99e0.mirror.swr.myhuaweicloud.com",
-    "https://ypzju6vq.mirror.aliyuncs.com",
-    "https://registry.docker-cn.com",
-    "http://hub-mirror.c.163.com",
-    "https://docker.mirrors.ustc.edu.cn"
+    "https://docker.ketches.cn",
+    "https://hub.uuuadc.top",
+    "https://docker.anyhub.us.kg",
+    "https://dockerhub.jobcher.com",
+    "https://docker.ckyl.me",
+    "https://docker.awsl9527.cn"
   ]
 }
 EOF
@@ -288,6 +289,34 @@ install_memos() {
   fi
 
 }
+
+install_rsspush() {
+  mkdir -p $docker_data/rsspush
+  cd $docker_data/rsspush
+  # 创建docker-compose文件
+  cat >docker-compose.yml <<'EOL'
+  version: '3'
+services:
+  rsspush:
+    image: easychen/rsspush
+    volumes:
+      - "./data:/rsspush/api/data"
+    environment:
+      - ADMIN_KEY=admin
+      - RSS_BASE=http://rsshub:1200
+      - TZ=Asia/Chongqing
+    ports:
+      - 8000:8000
+  rsshub:
+    image: diygod/rsshub
+    ports:
+      - 1200:1200
+EOL
+  
+    # 启动容器
+    docker-compose -f docker-compose.yml up -d
+    green "RSSPush 安装成功，请访问 http://你的服务器IP地址:8000"
+  }
 
 # 安装Nginx
 install_nginx() {
