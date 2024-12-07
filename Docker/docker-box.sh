@@ -129,7 +129,8 @@ install_docker() {
     "https://dockerhub.jobcher.com",
     "https://docker.ckyl.me",
     "https://docker.awsl9527.cn"
-  ]
+  ],
+  "live-restore": true
 }
 EOF
         systemctl daemon-reload
