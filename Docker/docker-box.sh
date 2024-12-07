@@ -26,8 +26,8 @@ menu_options=(
     "安装CloudDrive2"
     "安装CloudDrive2--fnOS专属"
     "安装Duplicati"
-    "安装GPT-free-api"
     "安装memos"
+    "安装nextchat"
     # =====Nginx相关=====
     "安装Nginx"
     "安装Nginx Proxy Manager"
@@ -51,8 +51,8 @@ commands=(
     ["安装CloudDrive2"]="install_clouddrive2"
     ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
-    ["安装GPT-free-api"]="install_GPT-free-api"
     ["安装memos"]="install_memos"
+    ["安装nextchat"]="install_nextchat"
     ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
 
@@ -237,55 +237,7 @@ EOL
   green "Duplicati 安装成功，请访问 http://你的服务器IP地址:8080"
 }
 
-# 安装GPT-free-api
-install_GPT-free-api() {
-  mkdir -p $docker_data/gpt-free-api
-  cd $docker_data/gpt-free-api
-  # 创建docker-compose文件
-  cat >docker-compose.yml <<'EOL'
-version: '3'
-services:
-# 月之暗面Kimi
-  kimi-free-api:
-    container_name: kimi-free-api
-    image: vinlic/kimi-free-api:latest
-    hostname: kimifree
-    restart: always
-    ports:
-      - "10013:8000" #10013可以修改，8000不可以修改
-    expose:
-      - "8000"
-    environment:
-      - TZ=Asia/Shanghai
-# 智谱清言GLM4
-  glm-free-api:
-    container_name: glm-free-api
-    hostname: glmfree
-    image: vinlic/glm-free-api:latest
-    restart: always
-    ports:
-      - "10015:8000"  #10015可以修改，8000不可以修改
-    expose:
-      - "8000"
-    environment:
-      - TZ=Asia/Shanghai
-# 通义千问Qwen-Max
-  qwen-free-api:
-    container_name: qwen-free-api
-    hostname: qwenfree
-    image: vinlic/qwen-free-api:latest
-    restart: always
-    ports:
-      - "10016:8000"  #10016可以修改，8000不可以修改
-    expose:
-      - "8000"
-    environment:
-      - TZ=Asia/Shanghai
-EOL
-  # 启动容器
-  docker-compose -f docker-compose.yml up -d
-  green "GPT-free-api 安装成功，kimi: http://你的服务器IP地址:10013, glm: http://你的服务器IP地址:10015, qwen: http://你的服务器IP地址:10016"
-}
+
 
 # 安装memos
 install_memos() {
