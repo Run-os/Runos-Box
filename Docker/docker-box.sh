@@ -126,9 +126,6 @@ install_docker() {
         tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": [
-    "https://docker.hpcloud.cloud",
-    "https://docker.m.daocloud.io",
-    "https://docker.unsee.tech",
     "https://docker.1panel.live",
     "http://mirrors.ustc.edu.cn",
     "https://docker.chenby.cn",
