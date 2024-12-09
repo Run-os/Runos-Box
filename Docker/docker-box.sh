@@ -10,7 +10,7 @@ highlight() { echo -e "\033[32m\033[01m$1\033[0m"; }
 cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
-docker_data="/root/data/docker_data"
+docker_data="/home/Docker/data"
 
 declare -a menu_options
 declare -A commands
@@ -27,7 +27,8 @@ menu_options=(
     "安装CloudDrive2--fnOS专属"
     "安装Duplicati"
     "安装memos"
-    "安装RSSPush"
+    "安装Homarr"
+    "安装freshrss"
     # =====Nginx相关=====
     "安装Nginx"
     "安装Nginx Proxy Manager"
@@ -52,7 +53,8 @@ commands=(
     ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
     ["安装memos"]="install_memos"
-    ["安装RSSPush"]="install_rsspush"
+    ["安装Homarr"]="install_Homarr"
+    ["安装freshrss"]="install_freshrss"
     ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
 
@@ -295,33 +297,60 @@ install_memos() {
 
 }
 
-install_rsspush() {
-  mkdir -p $docker_data/rsspush
-  cd $docker_data/rsspush
+install_Homarr() {
+  mkdir -p $docker_data/Homarr
+  cd $docker_data/Homarr
   # 创建docker-compose文件
   cat >docker-compose.yml <<'EOL'
-# version: '3'
+version: '3'
+#---------------------------------------------------------------------#
+#     Homarr - A simple, yet powerful dashboard for your server.      #
+#---------------------------------------------------------------------#
 services:
-  rsspush:
-    image: easychen/rsspush
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
     volumes:
-      - "./data:/rsspush/api/data"
-    environment:
-      - ADMIN_KEY=admin
-      - RSS_BASE=http://rsshub:1200
-      - TZ=Asia/Chongqing
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./homarr/configs:/app/data/configs
+      - ./homarr/icons:/app/public/icons
+      - ./homarr/data:/data
     ports:
-      - 8003:8000
-  rsshub:
-    image: diygod/rsshub
-    ports:
-      - 1200:1200
+      - '7575:7575'
 EOL
   
     # 启动容器
     docker-compose -f docker-compose.yml up -d
-    green "RSSPush 安装成功，请访问 http://你的服务器IP地址:8003"
+    green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
   }
+
+
+install_freshrss() {
+  mkdir -p $docker_data/freshrss
+  cd $docker_data/freshrss
+  # 创建docker-compose文件
+  cat >docker-compose.yml <<'EOL'
+version: "3.9"
+services:
+  freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+    volumes:
+      - /path/to/data:/config
+    ports:
+      - 8088:80
+    restart: unless-stopped
+EOL
+  
+    # 启动容器
+    docker-compose -f docker-compose.yml up -d
+    green "FreshRSS 安装成功，请访问 http://你的服务器IP地址:8088"
+  }  
 
 # 安装Nginx
 install_nginx() {
