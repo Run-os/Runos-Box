@@ -185,7 +185,7 @@ EOF
     --device /dev/fuse:/dev/fuse \
     cloudnas/clouddrive2
   green "clouddrive2 安装成功，请访问 http://你的服务器IP地址:19798"
-  green "私人提示：clouddrive2 安装成功，请访问 $ip_address:19798"
+  green "私人提示：clouddrive2 安装成功，请访问 http://$ip_address:19798"
 }
 
 # clouddrive2--fnOS专属
@@ -210,7 +210,7 @@ EOF
     --device /dev/fuse:/dev/fuse \
     cloudnas/clouddrive2
   green "clouddrive2 安装成功，请访问 http://你的服务器IP地址:19798"
-  green "私人提示：clouddrive2 安装成功，请访问 $ip_address:19798"
+  green "私人提示：clouddrive2 安装成功，请访问 http://$ip_address:19798"
 
 }
 
@@ -244,7 +244,7 @@ EOL
   # 启动容器
   docker-compose -f docker-compose.yml up -d
   green "Duplicati 安装成功，请访问 http://你的服务器IP地址:8080"
-  green "私人提示：Duplicati 安装成功，请访问 $ip_address:8080"
+  green "私人提示：Duplicati 安装成功，请访问 http://$ip_address:8080"
 }
 
 
@@ -267,7 +267,7 @@ install_memos() {
       neosmemo/memos --mode prod \
       --port 5230
     green "memos 安装成功，请访问 http://你的服务器IP地址:5230"
-    green "私人提示：memos 安装成功，请访问 $ip_address:5230"
+    green "私人提示：memos 安装成功，请访问 http://$ip_address:5230"
     green "注意：memos文件保存在 $docker_data/memos 文件夹下。"
   fi
 
@@ -326,7 +326,7 @@ EOL
     # 启动容器
     docker-compose -f docker-compose.yml up -d
     green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
-    green "私人提示：Homarr 安装成功，请访问 $ip_address:7575"
+    green "私人提示：Homarr 安装成功，请访问 http://$ip_address:7575"
   }
 
 
@@ -354,7 +354,7 @@ EOL
     # 启动容器
     docker-compose -f docker-compose.yml up -d
     green "FreshRSS 安装成功，请访问 http://你的服务器IP地址:8088"
-    green "私人提示：FreshRSS 安装成功，请访问 $ip_address:8088"
+    green "私人提示：FreshRSS 安装成功，请访问 http://$ip_address:8088"
   }  
 
 # 安装Nginx
