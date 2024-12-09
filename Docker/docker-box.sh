@@ -27,8 +27,9 @@ menu_options=(
     "安装CloudDrive2--fnOS专属"
     "安装Duplicati"
     "安装memos"
-    "安装Homarr"
-    "安装freshrss"
+    # =====Docker进阶=====
+    "安装Homarr--导航页"
+    "安装freshrss--rss服务器"
     # =====Nginx相关=====
     "安装Nginx"
     "安装Nginx Proxy Manager"
@@ -53,8 +54,8 @@ commands=(
     ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
     ["安装memos"]="install_memos"
-    ["安装Homarr"]="install_Homarr"
-    ["安装freshrss"]="install_freshrss"
+    ["安装Homarr--导航页"]="install_Homarr"
+    ["安装freshrss--rss服务器"]="install_freshrss"
     ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
 
