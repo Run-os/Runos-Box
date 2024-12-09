@@ -126,13 +126,13 @@ install_docker() {
         tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": [
-    "https://docker.1panel.live",
-    "http://mirrors.ustc.edu.cn",
-    "https://docker.chenby.cn",
-    "http://mirror.azure.cn",
+    "https://hub.geekery.cn",
+    "http://hub.littlediary.cn",
+    "https://docker.nastool.de",
+    "http://docker.1panelproxy.com",
     "https://dockerpull.org",
     "https://dockerhub.icu",
-    "https://hub.rat.dev"
+    "https://docker.1panel.live"
   ],
   "live-restore": true
 }
