@@ -331,7 +331,7 @@ install_freshrss() {
 version: "3.9"
 services:
   freshrss:
-    image: lscr.io/linuxserver/freshrss:latest
+    image: linuxserver/freshrss:latest
     container_name: freshrss
     environment:
       - PUID=1000
