@@ -306,16 +306,13 @@ install_Homarr() {
   # 创建docker-compose文件
   cat >docker-compose.yml <<'EOL'
 version: '3'
-#---------------------------------------------------------------------#
-#     Homarr - A simple, yet powerful dashboard for your server.      #
-#---------------------------------------------------------------------#
 services:
   homarr:
     container_name: homarr
-    image: ajnart/homarr:latest
+    image: ghcr.dockerproxy.net/ajnart/homarr:latest
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./homarr/configs:/app/data/configs
       - ./homarr/icons:/app/public/icons
       - ./homarr/data:/data
