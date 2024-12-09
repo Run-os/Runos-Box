@@ -309,7 +309,7 @@ version: '3'
 services:
   homarr:
     container_name: homarr
-    image: ghcr.dockerproxy.net/ajnart/homarr:0.15.8
+    image: ghcr.nju.edu.cn/ajnart/homarr:0.15.8
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
