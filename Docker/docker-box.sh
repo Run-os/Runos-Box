@@ -127,12 +127,11 @@ install_docker() {
 {
   "registry-mirrors": [
     "https://hub.geekery.cn",
-    "http://hub.littlediary.cn",
-    "https://docker.nastool.de",
-    "http://docker.1panelproxy.com",
+    "https://ghcr.geekery.cn",
     "https://dockerpull.org",
     "https://dockerhub.icu",
-    "https://docker.1panel.live"
+    "https://docker.1panel.live",
+    "https://docker.udayun.com"
   ],
   "live-restore": true
 }
