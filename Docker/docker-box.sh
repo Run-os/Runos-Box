@@ -11,7 +11,7 @@ cyan() { echo -e "\033[38;2;0;255;255m$1\033[0m"; }
 
 # 变量
 docker_data="/home/Docker/data"
-localIP=$(hostname -I)
+localIP=$(hostname -I | awk '{print $1}')
 
 declare -a menu_options
 declare -A commands
