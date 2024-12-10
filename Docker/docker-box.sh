@@ -313,8 +313,8 @@ install_Homarr() {
     -v $docker_data/homarr/configs:/app/data/configs \
     -v $docker_data/homarr/data:/data \
     -v $docker_data/homarr/icons:/app/public/icons \
-    -d ghcr.nju.edu.cn/ajnart/homarr:latest
-  
+    -d ghcr.dockerproxy.net/ajnart/homarr:latest
+
   green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
   green "私人提示：Homarr 安装成功，请访问 http://$ip_address:7575"
   }
