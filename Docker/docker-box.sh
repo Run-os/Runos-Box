@@ -30,7 +30,7 @@ menu_options=(
     "安装Duplicati"
     "安装memos"
     # =====Docker进阶=====
-    "安装Homarr--导航页"
+    "安装sun-panel--导航页"
     "安装freshrss--rss服务器"
     # =====Nginx相关=====
     "安装Nginx"
@@ -56,7 +56,7 @@ commands=(
     ["安装CloudDrive2--fnOS专属"]="install_clouddrive2_fnos"
     ["安装Duplicati"]="install_Duplicati"
     ["安装memos"]="install_memos"
-    ["安装Homarr--导航页"]="install_Homarr"
+    ["安装sun-panel--导航页"]="install_sun-panel"
     ["安装freshrss--rss服务器"]="install_freshrss"
     ["安装大圣的日常--脚本"]="install_daily_scripts"
 )
@@ -300,23 +300,31 @@ install_memos() {
 
 }
 
-install_Homarr() {
-  mkdir -p $docker_data/Homarr
-  cd $docker_data/Homarr
+install_sun-panel() {
+  mkdir -p $docker_data/sun-panel
+  cd $docker_data/sun-panel
 
-  # 创建docker
-  docker run  \
-    --name homarr \
-    --restart unless-stopped \
-    -p 7575:7575 \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v $docker_data/homarr/configs:/app/data/configs \
-    -v $docker_data/homarr/data:/data \
-    -v $docker_data/homarr/icons:/app/public/icons \
-    -d ghcr.dockerproxy.net/ajnart/homarr:latest
+  # 创建docker-compose文件
+  cat >docker-compose.yml <<'EOL'
+version: "3.2"
+services:
+  sun-panel:
+    image: "hslr/sun-panel:latest"
+    container_name: sun-panel
+    volumes:
+      - ./conf:/app/conf
+      - /var/run/docker.sock:/var/run/docker.sock # 挂载docker.sock
+      # - ./runtime:/app/runtime # 挂载日志目录
+      # - /mnt/sata1-1:/os # 硬盘挂载点（根据自己需求修改）
+    ports:
+      - 3002:3002
+    restart: always
+EOL
 
-  green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
-  green "私人提示：Homarr 安装成功，请访问 http://$ip_address:7575"
+  # 启动容器
+  docker-compose -f docker-compose.yml up -d
+  green "sun-panel 安装成功，请访问 http://你的服务器IP地址:3002"
+  green "私人提示：sun-panel 安装成功，请访问 http://$ip_address:3002"
   }
 
 
