@@ -303,27 +303,20 @@ install_memos() {
 install_Homarr() {
   mkdir -p $docker_data/Homarr
   cd $docker_data/Homarr
-  # 创建docker-compose文件
-  cat >docker-compose.yml <<'EOL'
-version: '3'
-services:
-  homarr:
-    container_name: homarr
-    image: ghcr.nju.edu.cn/ajnart/homarr:0.15.1
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./homarr/configs:/app/data/configs
-      - ./homarr/icons:/app/public/icons
-      - ./homarr/data:/data
-    ports:
-      - '7575:7575'
-EOL
+
+  # 创建docker
+  docker run  \
+    --name homarr \
+    --restart unless-stopped \
+    -p 7575:7575 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v $docker_data/homarr/configs:/app/data/configs \
+    -v $docker_data/homarr/data:/data \
+    -v $docker_data/homarr/icons:/app/public/icons \
+    -d ghcr.nju.edu.cn/ajnart/homarr:latest
   
-    # 启动容器
-    docker-compose -f docker-compose.yml up -d
-    green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
-    green "私人提示：Homarr 安装成功，请访问 http://$ip_address:7575"
+  green "Homarr 安装成功，请访问 http://你的服务器IP地址:7575"
+  green "私人提示：Homarr 安装成功，请访问 http://$ip_address:7575"
   }
 
 
