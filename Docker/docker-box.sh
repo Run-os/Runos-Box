@@ -805,7 +805,6 @@ install_daily_scripts() {
 
 # 显示菜单
 show_menu() {
-    clear
     echo
     greenline "════════════════════════════════════════════════════════════════"
     cyan "                        🐳 Runos-Box Docker 管理工具"
@@ -894,14 +893,16 @@ handle_choice() {
 
 # 主程序循环
 main() {
+    clear
     # 检查root权限
     check_root_privileges
 
-    blue " 💻 当前IP: $IP_ADDRESS"
-    
     green "🎉 欢迎使用 Runos-Box Docker 管理工具!"
     
+    blue " 💻 当前IP: $IP_ADDRESS"
+    
     while true; do
+        
         show_menu
         echo
         read -p "请输入选项序号 (输入 q 退出): " choice
