@@ -5,6 +5,7 @@
 # 脚本描述：Linux Docker 容器管理工具
 # 作者：Run-os
 # 版本：2.0
+# 注意：如果报错SSL错误，使用指令：wget -P /root -N --no-check-certificate https://raw.githubusercontent.com/Run-os/Runos-Box/main/Docker/docker-box.sh && chmod 700 /root/docker-box.sh && /root/docker-box.sh
 # =============================================================================
 
 # 注意：不使用 set -e，因为我们有自定义的错误处理机制
