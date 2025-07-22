@@ -31,11 +31,41 @@ cyan() { echo -e "${CYAN}$1${NC}"; }
 readonly DOCKER_DATA="/home/Docker/data"
 readonly MEMOS_VERSION="0.22.4"
 
-# 获取本机IP地址
+# 获取本机IP地址（优先公网IP，排除私有IP）
 get_ip_address() {
     local ip
-    ip=$(hostname -I | awk '{print $1}' 2>/dev/null || echo "127.0.0.1")
-    echo "$ip"
+    local all_ips
+    
+    # 获取所有IP地址
+    all_ips=$(hostname -I 2>/dev/null || ip route get 1 2>/dev/null | awk '{print $7}' | head -1)
+    
+    # 遍历所有IP，排除私有IP地址
+    for ip in $all_ips; do
+        # 排除私有IP段：
+        # 10.0.0.0/8 (10.0.0.0 - 10.255.255.255)
+        # 172.16.0.0/12 (172.16.0.0 - 172.31.255.255) 
+        # 192.168.0.0/16 (192.168.0.0 - 192.168.255.255)
+        # 127.0.0.0/8 (127.0.0.0 - 127.255.255.255) 本地回环
+        if [[ ! "$ip" =~ ^10\. ]] && \
+           [[ ! "$ip" =~ ^172\.(1[6-9]|2[0-9]|3[0-1])\. ]] && \
+           [[ ! "$ip" =~ ^192\.168\. ]] && \
+           [[ ! "$ip" =~ ^127\. ]] && \
+           [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "$ip"
+            return 0
+        fi
+    done
+    
+    # 如果没有找到公网IP，则使用第一个非回环的私有IP
+    for ip in $all_ips; do
+        if [[ ! "$ip" =~ ^127\. ]] && [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "$ip"
+            return 0
+        fi
+    done
+    
+    # 如果都没有，返回默认值
+    echo "127.0.0.1"
 }
 
 readonly IP_ADDRESS=$(get_ip_address)
