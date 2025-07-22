@@ -896,6 +896,8 @@ handle_choice() {
 main() {
     # 检查root权限
     check_root_privileges
+
+    blue " 💻 当前IP: $IP_ADDRESS"
     
     green "🎉 欢迎使用 Runos-Box Docker 管理工具!"
     
