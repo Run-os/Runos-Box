@@ -898,9 +898,7 @@ main() {
     check_root_privileges
 
     green "🎉 欢迎使用 Runos-Box Docker 管理工具!"
-    
-    blue " 💻 当前IP: $IP_ADDRESS"
-    
+
     while true; do
         
         show_menu
