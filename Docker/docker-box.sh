@@ -7,7 +7,7 @@
 # 版本：2.0
 # =============================================================================
 
-set -e  # 遇到错误时退出
+# 注意：不使用 set -e，因为我们有自定义的错误处理机制
 set -u  # 使用未定义变量时退出
 
 # 定义颜色输出函数
@@ -24,14 +24,11 @@ green() { echo -e "${GREEN}[INFO] $1${NC}"; }
 greenline() { echo -e "${GREEN} $1${NC}"; }
 yellow() { echo -e "${YELLOW}[NOTICE] $1${NC}"; }
 blue() { echo -e "${BLUE}[MESSAGE] $1${NC}"; }
-light_magenta() { echo -e "${MAGENTA}[NOTICE] $1${NC}"; }
-highlight() { echo -e "${GREEN}$1${NC}"; }
 cyan() { echo -e "${CYAN}$1${NC}"; }
 
 # 全局变量
 readonly DOCKER_DATA="/home/Docker/data"
 readonly MEMOS_VERSION="0.22.4"
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 获取本机IP地址
 get_ip_address() {
@@ -105,16 +102,6 @@ ensure_directory() {
         }
         green "创建目录: $dir"
     fi
-}
-
-create_docker_compose_file() {
-    local file_path="$1"
-    local content="$2"
-    
-    cat > "$file_path" << 'EOL'
-$content
-EOL
-    green "Docker Compose 文件已创建: $file_path"
 }
 
 prompt_yes_no() {
@@ -294,7 +281,11 @@ install_1panel_on_linux() {
 # 查看1panel用户信息
 read_1panel_info() {
     if check_command 1pctl; then
-        1pctl user-info
+        1pctl user-info || {
+            red "获取1panel用户信息失败"
+            return 1
+        }
+        green "如需修改密码，请使用 '1pctl update password'"
     else
         red "1panel未安装，请先安装1panel"
         return 1
@@ -825,7 +816,7 @@ show_menu() {
     greenline "════════════════════════════════════════════════════════════════"
 }
 
-# 错误处理函数
+# 错误处理函数（用于特殊情况）
 handle_error() {
     local exit_code=$?
     local line_number=$1
@@ -835,9 +826,6 @@ handle_error() {
         red "请检查错误信息并重试"
     fi
 }
-
-# 设置错误陷阱
-trap 'handle_error $LINENO' ERR
 
 # 执行选择的命令
 handle_choice() {
