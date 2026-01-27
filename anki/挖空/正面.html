@@ -1,0 +1,114 @@
+<!-- 1. 强制夜间模式检测 -->
+<script>
+    (function () {
+        var body = document.body;
+        var isNight = body.classList.contains("night") || body.classList.contains("nightMode") || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isNight) { document.documentElement.classList.add("night"); document.body.classList.add("night"); }
+    })();
+</script>
+
+<!-- 2. 隐藏原始数据 -->
+<div id="raw-Front" style="display:none">{{Front}}</div>
+
+<!-- 3. 卡片容器 -->
+<div class="minimal-card">
+    <span class="label">Question</span>
+    <div id="render-Front" class="content-block question-text"></div>
+</div>
+
+<!-- 4. 核心渲染脚本 -->
+<script>
+    var getResources = [
+        getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+        getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark.min.css"),
+        getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
+        getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+        getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+        getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js"),
+        getScript("_markdown-it-mark.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js")
+    ];
+
+    Promise.all(getResources)
+        .then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"))
+        .then(render)
+        .catch(e => { console.error(e); fallback() });
+
+    function render() {
+        processField("raw-Front", "render-Front");
+    }
+
+    function fallback() {
+        document.getElementById("render-Front").innerHTML = document.getElementById("raw-Front").innerHTML;
+    }
+
+    function processField(sourceID, targetID) {
+        let text = document.getElementById(sourceID).innerHTML;
+        text = cleanAnkiHTML(text);
+
+        let md = new markdownit({
+            html: true,
+            highlight: function (str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try { return hljs.highlight(str, { language: lang }).value; } catch (__) { }
+                }
+                return '';
+            }
+        }).use(markdownItMark);
+
+        let rendered = md.render(text);
+        let target = document.getElementById(targetID);
+        target.innerHTML = rendered.replace(/&lt;\/span&gt;/gi, "\\");
+
+        renderMathInElement(target, {
+            delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+            throwOnError: false
+        });
+    }
+
+    function cleanAnkiHTML(str) {
+        str = str.replace(/<[\/]?pre[^>]*>/gi, "");
+        str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
+        str = str.replace(/<div[^>]*>/gi, "\n");
+        str = str.replace(/<[\/]?span[^>]*>/gi, "");
+        str = str.replace(/<\/div[^>]*>/g, "\n");
+        str = str.replace(/&nbsp;/gi, " ");
+        str = str.replace(/&tab;/gi, "	");
+        str = str.replace(/&gt;/gi, ">");
+        str = str.replace(/&lt;/gi, "<");
+        return str.replace(/&amp;/gi, "&");
+    }
+
+    function getScript(path, altURL) {
+        return new Promise((resolve, reject) => {
+            if (window[path]) return resolve();
+            let script = document.createElement("script");
+            script.onload = () => { window[path] = true; resolve(); };
+            script.onerror = () => {
+                let script_online = document.createElement("script");
+                script_online.onload = () => { window[path] = true; resolve(); };
+                script_online.onerror = resolve;
+                script_online.src = altURL;
+                document.head.appendChild(script_online);
+            }
+            script.src = path;
+            document.head.appendChild(script);
+        })
+    }
+
+    function getCSS(path, altURL) {
+        return new Promise((resolve, reject) => {
+            let css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.onload = resolve;
+            css.onerror = () => {
+                let css_online = document.createElement('link');
+                css_online.rel = 'stylesheet';
+                css_online.href = altURL;
+                document.head.appendChild(css_online);
+                resolve();
+            }
+            css.href = path;
+            document.head.appendChild(css);
+        });
+    }
+</script>

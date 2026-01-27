@@ -1,0 +1,284 @@
+/* ====== 0. 全局视口设置 (兼容网页版) ====== */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* 不再强制锁定高度，允许网页版根据内容延伸 */
+    min-height: 100vh;
+}
+
+/* ====== 1. 基础布局与变量 ====== */
+.card {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+
+    /* --- 核心布局修改 --- */
+    /* 使用 Flexbox 代替绝对定位 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* 垂直居中 */
+    align-items: center;
+    /* 水平居中 */
+    min-height: 100vh;
+    /* 确保至少占满一屏 */
+    padding: 20px;
+    /* 给网页版留出四周间隙，防止贴边 */
+    box-sizing: border-box;
+
+    /* --- 变量：日间模式 --- */
+    --bg-site: #f2f2f7;
+    --bg-card: #ffffff;
+    --txt-main: #1d1d1f;
+    --txt-sub: #86868b;
+    --line: #ebebf0;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --code-bg: #f5f5f7;
+    --code-txt: #1d1d1f;
+    --border-color: transparent;
+    --img-filter: none;
+
+    background-color: var(--bg-site);
+    color: var(--txt-main);
+}
+
+/* --- 变量：夜间模式覆盖 --- */
+/* AnkiWeb 可能不加 night 类，但我们会尽量适配 */
+.night .card,
+.night.card,
+body.night .card {
+    --bg-site: #000000;
+    --bg-card: #1c1c1e;
+    --txt-main: #dfdfe0;
+    --txt-sub: #98989d;
+    --line: #38383a;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --code-bg: #2c2c2e;
+    --code-txt: #ffffff;
+    --border-color: #2c2c2e;
+    --img-filter: brightness(0.85);
+}
+
+/* ====== 2. 卡片本体 (自适应容器) ====== */
+.minimal-card {
+    /* --- 移除绝对定位，改用自然流 --- */
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+
+    /* 让内容自然撑开，不再强行限制高度 */
+    /* 如果内容特别多，网页版会自动出现滚动条 */
+    margin: auto;
+
+    /* 视觉样式 */
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    padding: 45px 55px;
+    box-sizing: border-box;
+}
+
+/* ====== 3. 手机端适配 ====== */
+@media (max-width: 600px) {
+    .card {
+        display: block;
+        /* 手机端取消 Flex 居中，改为自然排列 */
+        padding: 15px;
+        min-height: 100vh;
+    }
+
+    .minimal-card {
+        width: 100%;
+        max-width: none;
+        padding: 25px 20px;
+        border-radius: 18px;
+        margin: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* 手机夜间微调 */
+    .night .minimal-card,
+    body.night .minimal-card {
+        background-color: #121212;
+        border: 1px solid #222;
+    }
+
+    .question-text {
+        font-size: 20px !important;
+    }
+}
+
+/* ====== 4. 内容排版 ====== */
+.label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--txt-sub);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.content-block {
+    text-align: left;
+    margin-bottom: 30px;
+    word-wrap: break-word;
+}
+
+.question-text {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--txt-main);
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--line);
+    margin: 30px 0;
+    width: 100%;
+}
+
+.answer-text {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--txt-main);
+    line-height: 1.7;
+}
+
+/* ====== 5. 细节优化 ====== */
+
+/* 图片 */
+img {
+    display: inline-block;
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 10px 0;
+    filter: var(--img-filter);
+    border: 1px solid var(--line);
+}
+
+/* 代码块修复 */
+pre {
+    background-color: var(--code-bg) !important;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px !important;
+    margin: 25px 0;
+    overflow-x: auto;
+    line-height: 1.5;
+}
+
+pre code,
+code.hljs {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    font-family: "SF Mono", "Menlo", "Consolas", "Monaco", monospace;
+    font-size: 13.5px;
+    color: var(--code-txt);
+    white-space: pre;
+}
+
+.night pre code {
+    color: #ffffff !important;
+}
+
+/* 手机端公式防溢出 */
+.katex-display {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    margin: 1em 0 !important;
+    padding-bottom: 6px !important;
+    text-align: center;
+}
+
+.katex-display>.katex {
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+/* 链接 & 强调 */
+a {
+    color: #007aff;
+    text-decoration: none;
+}
+
+.night a,
+body.night a {
+    color: #0a84ff;
+}
+
+strong,
+b {
+    font-weight: 700;
+    color: var(--txt-main);
+}
+
+/* ====== 6. 挖空效果 (Cloze) ====== */
+
+/* 正面 - 隐藏文字，显示蓝色下划线 */
+.cloze-hidden {
+    color: transparent;
+    border-bottom: 2px solid #007aff;
+    display: inline;
+    user-select: none;
+}
+
+/* 背面 - 显示的挖空答案（高亮） */
+.cloze {
+    background-color: #007aff;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+/* 夜间模式适配 */
+.night .cloze-hidden,
+body.night .cloze-hidden {
+    border-bottom-color: #0a84ff;
+}
+
+.night .cloze,
+body.night .cloze {
+    background-color: #0a84ff;
+    color: #ffffff;
+}
+
+/* 背面 - 可点击切换的挖空 */
+.cloze-toggle {
+    color: transparent;
+    border-bottom: 2px solid #007aff;
+    display: inline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+/* 点击后显示答案 */
+.cloze-toggle.revealed {
+    color: #007aff;
+    font-weight: 600;
+}
+
+/* 夜间模式适配 */
+.night .cloze-toggle,
+body.night .cloze-toggle {
+    border-bottom-color: #0a84ff;
+}
+
+.night .cloze-toggle.revealed,
+body.night .cloze-toggle.revealed {
+    color: #0a84ff;
+}
