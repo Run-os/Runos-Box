@@ -58,7 +58,7 @@
 
         let rendered = md.render(text);
         let target = document.getElementById(targetID);
-        target.innerHTML = rendered.replace(/&lt;\/span&gt;/gi, "\\");
+        target.innerHTML = rendered;
 
         renderMathInElement(target, {
             delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
@@ -72,11 +72,13 @@
         str = str.replace(/<div[^>]*>/gi, "\n");
         str = str.replace(/<[\/]?span[^>]*>/gi, "");
         str = str.replace(/<\/div[^>]*>/g, "\n");
+        // 必须先替换 &，因为它会破坏其他实体的正确解码
+        str = str.replace(/&/gi, "&");
         str = str.replace(/&nbsp;/gi, " ");
         str = str.replace(/&tab;/gi, "	");
-        str = str.replace(/&gt;/gi, ">");
-        str = str.replace(/&lt;/gi, "<");
-        return str.replace(/&amp;/gi, "&");
+        str = str.replace(/>/gi, ">");
+        str = str.replace(/</gi, "<");
+        return str;
     }
 
     function getScript(path, altURL) {

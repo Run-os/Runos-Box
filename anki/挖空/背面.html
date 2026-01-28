@@ -55,6 +55,9 @@
     function render() {
         processField("raw-Front", "render-Front");
         processField("raw-Back", "render-Back");
+        // 只对背面答案区域处理标签样式和列表符号
+        processTags("render-Back");
+        processListBullets("render-Back");
     }
 
     function fallback() {
@@ -64,6 +67,10 @@
 
     function processField(sourceID, targetID) {
         let text = document.getElementById(sourceID).innerHTML;
+
+        // 在清理 HTML 之前先处理 bullet 点，避免 <br> 被转换后丢失结构
+        text = processBulletsInText(text);
+
         text = cleanAnkiHTML(text);
 
         let md = new markdownit({
@@ -79,7 +86,7 @@
 
         let rendered = md.render(text);
         let target = document.getElementById(targetID);
-        target.innerHTML = rendered.replace(/&lt;\/span&gt;/gi, "\\");
+        target.innerHTML = rendered;
 
         // 处理挖空语法 (cloze deletion)
         processCloze(target);
@@ -100,17 +107,59 @@
         element.innerHTML = html;
     }
 
+    // 处理 [文本] 格式的绿色标签
+    function processTags(targetID) {
+        let target = document.getElementById(targetID);
+        let html = target.innerHTML;
+        // 匹配 [文本] 格式，转换为带 tag 类的 span
+        const tagRegex = /\[([^\]]+)\]/g;
+        html = html.replace(tagRegex, function (match, content) {
+            return '<span class="tag">' + content + '</span>';
+        });
+        target.innerHTML = html;
+    }
+
+    // 在原始文本中处理 bullet 点（支持 • 和 - 两种符号）
+    function processBulletsInText(text) {
+        // 匹配 • 或 - 开头的内容，包括被 <br> 或换行分隔的多行
+        // 捕获从符号开始到下一个 <br> 或文本结束的内容
+        const bulletRegex = /[•-]\s+([^<\n]+)/g;
+        text = text.replace(bulletRegex, function (match, content) {
+            return '<span class="bullet-item">' + content.trim() + '</span>';
+        });
+        return text;
+    }
+
+    // 处理 • 列表符号样式（用于渲染后的 HTML）
+    function processListBullets(targetID) {
+        let target = document.getElementById(targetID);
+
+        // 处理所有包含 bullet 的元素（包括 <p>、<li>、<span> 等）
+        const allElements = target.querySelectorAll('p, li, span, div');
+
+        allElements.forEach(function (el) {
+            let html = el.innerHTML;
+            // 检查是否包含 bullet-item
+            if (html.includes('bullet-item')) {
+                el.classList.add('has-bullet');
+            }
+        });
+    }
+
     function cleanAnkiHTML(str) {
         str = str.replace(/<[\/]?pre[^>]*>/gi, "");
         str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
         str = str.replace(/<div[^>]*>/gi, "\n");
-        str = str.replace(/<[\/]?span[^>]*>/gi, "");
+        // 保留带 bullet-item 或 tag 类的 span，移除其他 span
+        str = str.replace(/<span\s+(?!class=["']?(?:bullet-item|tag)["']?)[^>]*>|<\/span>/gi, "");
         str = str.replace(/<\/div[^>]*>/g, "\n");
+        // 必须先替换 &，因为它会破坏其他实体的正确解码
+        str = str.replace(/&/gi, "&");
         str = str.replace(/&nbsp;/gi, " ");
         str = str.replace(/&tab;/gi, "	");
-        str = str.replace(/&gt;/gi, ">");
-        str = str.replace(/&lt;/gi, "<");
-        return str.replace(/&amp;/gi, "&");
+        str = str.replace(/>/gi, ">");
+        str = str.replace(/</gi, "<");
+        return str;
     }
 
     function getScript(path, altURL) {
