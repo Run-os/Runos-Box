@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>现代蓝色边框表格</title>
+    <style>
+        /* 全局样式重置，消除默认边距和padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        /* 页面容器，让表格居中+留边距 */
+        .table-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 10px;
+        }
+
+        /* 核心表格样式 */
+        .modern-blue-table {
+            width: 100%;
+            border-collapse: collapse;
+            /* 合并边框，实现内部细线 */
+            border: 2px solid #1677ff;
+            /* 表格外边框：蓝色（阿里云蓝，现代常用） */
+            border-radius: 8px;
+            /* 微圆角，现代化关键 */
+            overflow: hidden;
+            /* 配合border-radius，避免内容溢出圆角 */
+            background-color: #fff;
+            box-shadow: 0 2px 12px 0 rgba(22, 119, 255, 0.08);
+            /* 轻微阴影，增加层次感 */
+        }
+
+        /* 表头样式 */
+        .modern-blue-table thead th {
+            background-color: #e6f4ff;
+            /* 浅蓝背景，与主色呼应 */
+            color: #1677ff;
+            font-weight: 600;
+            padding: 16px;
+            text-align: left;
+            border: 1px solid #c9e2ff;
+            /* 表头内部蓝色细线 */
+        }
+
+        /* 表格内容单元格 */
+        .modern-blue-table tbody td {
+            padding: 16px;
+            color: #333;
+            border: 1px solid #c9e2ff;
+            /* 内容区内部蓝色细线（浅于外边框，更美观） */
+            transition: background-color 0.2s ease;
+            /* hover过渡，更丝滑 */
+        }
+
+        /* 偶数行隔行变色，提升可读性 */
+        .modern-blue-table tbody tr:nth-child(even) {
+            background-color: #f5faff;
+        }
+
+        /* 行hover高亮，交互更友好 */
+        .modern-blue-table tbody tr:hover {
+            background-color: #e6f4ff;
+            cursor: default;
+        }
+
+        /* 响应式：小屏（768px以下）让表格横向滚动，避免挤压 */
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .modern-blue-table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="table-container">
+        <table class="modern-blue-table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>产品名称</th>
+                    <th>规格型号</th>
+                    <th>单价（元）</th>
+                    <th>库存数量</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>无线蓝牙耳机</td>
+                    <td>Pro Max 2代</td>
+                    <td>299</td>
+                    <td>156</td>
+                    <td>查看/编辑</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>快充数据线</td>
+                    <td>Type-C 100W</td>
+                    <td>39</td>
+                    <td>890</td>
+                    <td>查看/编辑</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>便携充电宝</td>
+                    <td>20000mAh 22.5W</td>
+                    <td>129</td>
+                    <td>320</td>
+                    <td>查看/编辑</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>高清钢化膜</td>
+                    <td>全屏覆盖 抗蓝光</td>
+                    <td>19.9</td>
+                    <td>1200</td>
+                    <td>查看/编辑</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

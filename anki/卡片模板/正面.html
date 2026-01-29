@@ -19,13 +19,14 @@
 <!-- 4. 核心渲染脚本 -->
 <script>
     var getResources = [
-        getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
-        getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark.min.css"),
-        getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
-        getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+        getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"),
+        getCSS("_highlight.css", "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css"),
+        getScript("_highlight.js", "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"),
+        getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"),
         getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
-        getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js"),
-        getScript("_markdown-it-mark.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js")
+        getScript("_markdown-it.min.js", "https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"),
+        // markdown-it 官方独立插件
+        getScript("_markdown-it-mark.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-mark@3.0.1/dist/markdown-it-mark.min.js"),
     ];
 
     Promise.all(getResources)
@@ -44,6 +45,8 @@
     function processField(sourceID, targetID) {
         let text = document.getElementById(sourceID).innerHTML;
         text = cleanAnkiHTML(text);
+        // 处理bullet点为标准markdown列表
+        text = processBulletsInText(text);
 
         let md = new markdownit({
             html: true,
@@ -54,7 +57,13 @@
                 }
                 return '';
             }
-        }).use(markdownItMark);
+        });
+
+        // 使用 markdown-it-mark 插件 (==text== 高亮)
+        if (typeof markdownitMark !== 'undefined') {
+            md.use(markdownitMark);
+            console.log('[Debug] markdown-it-mark loaded');
+        }
 
         let rendered = md.render(text);
         let target = document.getElementById(targetID);
@@ -66,18 +75,28 @@
         });
     }
 
+    // 处理bullet点（•/-）- 转换为标准Markdown无序列表
+    function processBulletsInText(text) {
+        return text.replace(/^[•-]\s+(.+)$/gm, (match, content) => {
+            return '- ' + content.trim();
+        });
+    }
+
     function cleanAnkiHTML(str) {
         str = str.replace(/<[\/]?pre[^>]*>/gi, "");
         str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
         str = str.replace(/<div[^>]*>/gi, "\n");
         str = str.replace(/<[\/]?span[^>]*>/gi, "");
         str = str.replace(/<\/div[^>]*>/g, "\n");
-        // 必须先替换 &，因为它会破坏其他实体的正确解码
-        str = str.replace(/&/gi, "&");
+        // 【修复】正确的实体解码顺序：先解码完整的实体，再解码单个字符
+        // 解码完整的 HTML 实体（这些实体不会与普通字符混淆）
         str = str.replace(/&nbsp;/gi, " ");
         str = str.replace(/&tab;/gi, "	");
-        str = str.replace(/>/gi, ">");
-        str = str.replace(/</gi, "<");
+        str = str.replace(/&/gi, "&");      // & 实体必须最先解码
+        str = str.replace(/</gi, "<");       // < 实体
+        str = str.replace(/>/gi, ">");       // > 实体
+        str = str.replace(/"/gi, '"');     // " 实体
+        str = str.replace(/'/gi, "'");      // ' 实体
         return str;
     }
 

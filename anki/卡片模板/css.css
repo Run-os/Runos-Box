@@ -1,0 +1,1475 @@
+/* ====== 0. 全局视口设置 (兼容网页版) ====== */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ====== 1. 基础布局与变量 ====== */
+.card {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "LXGW WenKai", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: var(--line-height, 2.2);
+
+    /* --- 核心布局修改 --- */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+
+    /* --- 变量：日间模式 (Phycat Sakura 粉色系) --- */
+    --bg-site: #fff7fa;
+    --bg-card: #ffffff;
+    --txt-main: #1c1719;
+    --txt-sub: #3f3a3b;
+    --primary-color: #ff7096;
+    --secondary-color: #bd93f9;
+    --accent-color: #8be9fd;
+    --link-hover-color: #d81b60;
+    --line: #ebebf0;
+    --glow-color: rgba(255, 112, 150, 0.5);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --code-bg: #fff4f8;
+    --code-txt: #546e7a;
+    --code-keyword: #d81b60;
+    --code-function: #8e24aa;
+    --code-string: #2e7d32;
+    --code-comment: #b0bec5;
+    --code-block-header-bg: color-mix(in srgb, var(--primary-color), transparent 92%);
+    --border-color: color-mix(in srgb, var(--primary-color), transparent 60%);
+
+    /* 标题样式变量 */
+    --h1-color: var(--txt-main);
+    --h1-size: 1.618em;
+    --h2-color: var(--text-bold, #e91e63);
+    --h2-size: 1.462em;
+    --h3-size: 1.318em;
+    --h4-size: 1.2em;
+
+    /* 表格变量 */
+    --table-bg: rgba(255, 255, 255, 0.4);
+    --table-th-bg: color-mix(in srgb, var(--primary-color), white 90%);
+    --table-th-border: color-mix(in srgb, var(--primary-color), transparent 80%);
+    --table-cell-hover-bg: color-mix(in srgb, var(--primary-color), white 80%);
+    --table-border-inner: rgba(0, 0, 0, 0.06);
+
+    /* 引用块变量 */
+    --blockquote-background-color: color-mix(in srgb, var(--primary-color), white 96%);
+
+    /* 复选框变量 */
+    --checkbox-bg-unchecked: color-mix(in srgb, var(--primary-color), transparent 90%);
+    --checkbox-border-unchecked: color-mix(in srgb, var(--primary-color), transparent 50%);
+    --checkbox-bg-checked: var(--primary-color);
+
+    background-color: var(--bg-site);
+    color: var(--txt-main);
+    letter-spacing: 1px;
+    word-spacing: 2px;
+}
+
+/* --- 变量：夜间模式 (Phycat Vampire Dracula 风格) --- */
+.night .card,
+.night.card,
+body.night .card {
+    --bg-site: #282a36;
+    --bg-card: #1c1c1e;
+    --txt-main: #f8f8f2;
+    --txt-sub: #d0d0d0;
+    --primary-color: #ff5555;
+    --secondary-color: #bd93f9;
+    --accent-color: #8be9fd;
+    --link-hover-color: #ff92d0;
+    --line: #38383a;
+    --glow-color: rgba(255, 85, 85, 0.6);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --code-bg: #2c2c2e;
+    --code-txt: #f8f8f2;
+    --code-keyword: #ff79c6;
+    --code-function: #50fa7b;
+    --code-string: #f1fa8c;
+    --code-comment: #6272a4;
+    --code-block-header-bg: transparent;
+    --border-color: #44475a;
+
+    --table-bg: rgba(255, 255, 255, 0.02);
+    --table-th-bg: color-mix(in srgb, var(--primary-color), transparent 95%);
+    --table-th-border: color-mix(in srgb, var(--primary-color), transparent 85%);
+    --table-cell-hover-bg: color-mix(in srgb, var(--primary-color), transparent 85%);
+    --table-border-inner: rgba(255, 255, 255, 0.05);
+
+    --blockquote-background-color: rgba(0, 0, 0, 0.2);
+
+    --checkbox-bg-unchecked: rgba(255, 255, 255, 0.05);
+    --checkbox-border-unchecked: rgba(255, 255, 255, 0.3);
+    --checkbox-bg-checked: color-mix(in srgb, var(--primary-color), transparent 80%);
+
+    --text-faint: color-mix(in srgb, var(--primary-color), transparent 20%);
+}
+
+/* ====== 2. 卡片本体 (自适应容器) ====== */
+.minimal-card {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    margin: auto;
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    padding: 45px 55px;
+    box-sizing: border-box;
+}
+
+/* ====== 3. 手机端适配 ====== */
+@media (max-width: 600px) {
+    .card {
+        display: block;
+        padding: 15px;
+        min-height: 100vh;
+    }
+
+    .minimal-card {
+        width: 100%;
+        max-width: none;
+        padding: 25px 20px;
+        border-radius: 18px;
+        margin: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .night .minimal-card,
+    body.night .minimal-card {
+        background-color: #121212;
+        border: 1px solid #222;
+    }
+
+    .question-text {
+        font-size: 20px !important;
+    }
+}
+
+/* ====== 4. 内容排版 ====== */
+.label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--txt-sub);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.content-block {
+    text-align: left;
+    margin-bottom: 30px;
+    word-wrap: break-word;
+    line-height: var(--line-height, 2.2);
+}
+
+.question-text {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--txt-main);
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--line);
+    margin: 30px 0;
+    width: 100%;
+}
+
+.answer-text {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--txt-main);
+    line-height: 1.7;
+}
+
+/* ====== 5. 标题样式 (Phycat 风格) ====== */
+.content-block h1 {
+    text-align: center;
+    font-weight: 700;
+    margin: 1em auto 0.8em;
+    line-height: 1.4;
+    color: var(--h1-color);
+    padding-bottom: 12px;
+    border-bottom: none;
+    display: block;
+    width: fit-content;
+    min-width: 120px;
+    position: relative;
+    font-size: var(--h1-size);
+}
+
+.content-block h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-color));
+    transform: translateX(-50%);
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.content-block h1:hover {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.content-block h1:hover::after {
+    width: 100%;
+}
+
+.content-block h2 {
+    color: var(--h2-color);
+    font-weight: 600;
+    position: relative;
+    padding-left: 20px;
+    margin: 1.5em 0 1em;
+    font-size: var(--h2-size);
+}
+
+.content-block h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;
+    height: 70%;
+    width: 5px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.content-block h2::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 30%;
+    height: 40%;
+    width: 2px;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+    opacity: 0.6;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.05s;
+}
+
+.content-block h2:hover {
+    color: var(--primary-color);
+}
+
+.content-block h2:hover::before {
+    height: 100%;
+    top: 0;
+    opacity: 0.4;
+}
+
+.content-block h2:hover::after {
+    height: 80%;
+    top: 10%;
+    width: 4px;
+    opacity: 1;
+    background-color: var(--primary-color);
+}
+
+/* 夜间模式 H2 */
+.night .content-block h2,
+body.night .content-block h2 {
+    color: var(--txt-main);
+}
+
+.night .content-block h2::before {
+    box-shadow: 0 0 8px color-mix(in srgb, var(--primary-color), transparent 50%);
+}
+
+.night .content-block h2:hover {
+    color: var(--primary-color);
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+.night .content-block h2:hover::before {
+    opacity: 0.5;
+}
+
+.night .content-block h2:hover::after {
+    box-shadow: 0 0 12px var(--primary-color);
+}
+
+.content-block h3 {
+    font-size: var(--h3-size);
+    color: var(--txt-main);
+    position: relative;
+    padding-left: 15px;
+    margin: 1.5em 0 1em;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.content-block h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.3rem;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.content-block h3:hover {
+    padding-left: 20px;
+    color: var(--primary-color);
+}
+
+.content-block h3:hover::before {
+    height: 24px;
+    width: 7px;
+}
+
+/* 夜间模式 H3 */
+.night .content-block h3 {
+    display: block;
+    transition: padding-left 0.3s ease, color 0.3s ease;
+}
+
+.night .content-block h3::before {
+    opacity: 0.8;
+}
+
+.night .content-block h3:hover {
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+.night .content-block h3:hover::before {
+    box-shadow: 0 0 8px var(--glow-color);
+}
+
+.content-block h4 {
+    font-size: var(--h4-size);
+    color: var(--txt-main);
+    padding-left: 20px;
+    margin: 1.2em 0 0.8em;
+    position: relative;
+}
+
+.content-block h4::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.content-block h4:hover {
+    color: var(--primary-color);
+    transform: translateX(6px);
+}
+
+.content-block h4:hover::before {
+    transform: translateY(-50%) scale(1.3);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color), white 70%);
+}
+
+/* 夜间模式 H4 */
+.night .content-block h4 {
+    display: flex;
+    align-items: center;
+}
+
+.night .content-block h4:hover {
+    text-shadow: 0 0 8px var(--glow-color);
+    transform: translateX(5px);
+}
+
+.night .content-block h4:hover::before {
+    box-shadow: 0 0 8px var(--glow-color);
+}
+
+.content-block h5 {
+    color: var(--txt-main);
+    padding-left: 20px;
+    margin: 1em 0 0.6em;
+    position: relative;
+}
+
+.content-block h5::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.content-block h5:hover {
+    color: var(--primary-color);
+    transform: translateX(6px);
+}
+
+.content-block h5:hover::before {
+    background-color: var(--primary-color);
+    transform: translateY(-50%) scale(1.2);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color), white 70%);
+}
+
+.content-block h6 {
+    color: var(--txt-main);
+    padding-left: 20px;
+    margin: 1em 0 0.6em;
+    position: relative;
+}
+
+.content-block h6::before {
+    content: "-";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+    font-weight: bold;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.content-block h6:hover {
+    color: var(--primary-color);
+    transform: translateX(6px);
+}
+
+.content-block h6:hover::before {
+    transform: translateY(-50%) scaleX(1.8);
+}
+
+/* 夜间模式 H5 H6 */
+.night .content-block h5,
+.night .content-block h6 {
+    display: flex;
+    align-items: center;
+}
+
+.night .content-block h5:hover,
+.night .content-block h6:hover {
+    text-shadow: 0 0 8px var(--glow-color);
+    transform: translateX(5px);
+}
+
+.night .content-block h5:hover::before {
+    box-shadow: 0 0 8px var(--glow-color);
+}
+
+.night .content-block h6:hover::before {
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+/* ====== 6. 链接样式 (Phycat 风格) ====== */
+.content-block a {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    padding: 0 2px;
+    margin: 0;
+    border-radius: 4px;
+    position: relative;
+    border-bottom: none !important;
+    background-image: none !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.content-block a::before {
+    content: "[";
+    display: inline-block;
+    color: var(--txt-sub);
+    margin-right: 1px;
+    opacity: 0.7;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s, opacity 0.3s;
+}
+
+.content-block a::after {
+    content: "]";
+    display: inline-block;
+    color: var(--txt-sub);
+    margin-left: 1px;
+    opacity: 0.7;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s, opacity 0.3s;
+}
+
+.content-block a:hover {
+    background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+}
+
+.content-block a:hover::before {
+    transform: translateX(-4px);
+    color: var(--primary-color);
+    font-weight: bold;
+    opacity: 1;
+}
+
+.content-block a:hover::after {
+    transform: translateX(4px);
+    color: var(--primary-color);
+    font-weight: bold;
+    opacity: 1;
+}
+
+/* 夜间模式链接 */
+.night .content-block a,
+body.night .content-block a {
+    color: var(--primary-color) !important;
+}
+
+.night .content-block a:hover,
+body.night .content-block a:hover {
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+/* ====== 7. 强调样式 (Phycat 风格) ====== */
+.content-block strong,
+.content-block b {
+    font-weight: 700;
+    color: var(--txt-main);
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.5, 1.5, 0.5, 1), color 0.2s ease;
+}
+
+.night .content-block strong,
+.night .content-block b,
+body.night .content-block strong,
+body.night .content-block b {
+    color: var(--primary-color);
+}
+
+.night .content-block strong:hover,
+.night .content-block b:hover,
+body.night .content-block strong:hover,
+body.night .content-block b:hover {
+    transform: translateY(-2px) scale(1.1);
+    text-shadow: 0 0 10px var(--primary-color);
+    z-index: 1;
+}
+
+/* 日间模式强调 */
+.content-block strong:hover,
+.content-block b:hover {
+    transform: translateY(-2px) scale(1.03);
+    text-shadow: none;
+    color: var(--primary-color) !important;
+}
+
+/* 斜体样式 */
+.content-block em {
+    font-style: italic;
+    text-decoration: none !important;
+    padding: 0 2px 4px;
+    position: relative;
+    z-index: 0;
+    transition: color 0.2s ease, -webkit-text-stroke 0.2s ease;
+    color: var(--secondary-color);
+}
+
+.content-block em::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M0 3.5c5 0 5-3 10-3s5 3 10 3 5-3 10-3 5 3 10 3'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: repeat-x;
+    -webkit-mask-size: 12px 4px;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 4'%3E%3Cpath fill='none' stroke='black' stroke-width='2' d='M0 3.5c5 0 5-3 10-3s5 3 10 3 5-3 10-3 5 3 10 3'/%3E%3C/svg%3E");
+    mask-repeat: repeat-x;
+    mask-size: 12px 4px;
+    opacity: 0.6;
+    background-color: var(--secondary-color);
+    z-index: -1;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+@keyframes waveFlow {
+    0% {
+        -webkit-mask-position-x: 0;
+        mask-position-x: 0;
+    }
+
+    100% {
+        -webkit-mask-position-x: 12px;
+        mask-position-x: 12px;
+    }
+}
+
+.night .content-block em,
+body.night .content-block em {
+    color: var(--secondary-color);
+}
+
+.night .content-block em:hover,
+body.night .content-block em:hover {
+    color: var(--primary-color);
+    font-weight: normal;
+    -webkit-text-stroke: 0.5px var(--primary-color);
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+.night .content-block em:hover::after {
+    opacity: 1;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    animation: waveFlow 1s linear infinite;
+}
+
+.content-block em:hover {
+    color: var(--primary-color);
+    font-weight: normal;
+    -webkit-text-stroke: 0.6px var(--primary-color);
+    text-shadow: none;
+}
+
+.content-block em:hover::after {
+    opacity: 1;
+    background-color: var(--primary-color);
+    animation: waveFlow 1s linear infinite;
+}
+
+/* 删除线 */
+.content-block s,
+.content-block del {
+    text-decoration: line-through;
+    transition: all 0.3s ease;
+}
+
+.night .content-block s,
+.night .content-block del,
+body.night .content-block s,
+body.night .content-block del {
+    text-decoration-color: var(--primary-color);
+    color: #888;
+}
+
+.night .content-block s:hover,
+.night .content-block del:hover,
+body.night .content-block s:hover,
+body.night .content-block del:hover {
+    opacity: 1;
+    color: var(--primary-color) !important;
+    text-decoration-color: var(--secondary-color);
+    cursor: not-allowed;
+    text-shadow: 0 0 8px var(--primary-color);
+}
+
+.content-block s:hover,
+.content-block del:hover {
+    opacity: 1;
+    color: var(--txt-main) !important;
+    text-decoration-color: #ff5555;
+    cursor: not-allowed;
+    text-shadow: none;
+}
+
+/* 高亮标记 */
+.content-block mark {
+    background-color: transparent !important;
+    padding: 0 2px;
+    margin: 0;
+    border-radius: 4px;
+    font-weight: inherit;
+    color: inherit;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.content-block mark::before,
+.content-block mark::after {
+    content: none !important;
+    display: none !important;
+}
+
+.content-block mark {
+    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 60%), transparent);
+    background-size: 100% 40%;
+    color: var(--txt-main);
+}
+
+.content-block mark:hover {
+    background-size: 100% 100%;
+    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 40%), color-mix(in srgb, var(--primary-color), transparent 80%));
+}
+
+.night .content-block mark,
+body.night .content-block mark {
+    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 50%), transparent) !important;
+    background-size: 100% 40%;
+    color: color-mix(in srgb, var(--primary-color), white 20%) !important;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.night .content-block mark:hover,
+body.night .content-block mark:hover {
+    background-size: 100% 100%;
+    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 20%), color-mix(in srgb, var(--primary-color), transparent 80%)) !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px var(--primary-color);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--primary-color), transparent 80%);
+    transform: none;
+}
+
+/* ====== 8. 引用块样式 (Phycat 风格) ====== */
+.content-block blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 18px 20px 18px 48px;
+    background-color: var(--blockquote-background-color);
+    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 80%);
+    border-radius: 16px;
+    color: var(--txt-sub);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.content-block blockquote::before {
+    content: "✨";
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    font-size: 20px;
+    line-height: 1;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+    filter: none;
+    opacity: 1;
+    transform: rotate(30deg);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.content-block blockquote p {
+    color: var(--txt-sub);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-bottom: 0.5em;
+    line-height: var(--blockquote-line-height, 1.6);
+}
+
+.content-block blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.content-block blockquote:hover {
+    transform: scale(1.02);
+    background-color: color-mix(in srgb, var(--primary-color), white 92%);
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--primary-color), transparent 85%);
+}
+
+.content-block blockquote:hover::before {
+    transform: rotate(0deg);
+    text-shadow: 0 0 8px var(--primary-color);
+}
+
+/* 夜间模式引用块 */
+.night .content-block blockquote,
+body.night .content-block blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 18px 20px 18px 48px;
+    color: var(--txt-sub);
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--secondary-color), transparent 70%);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.night .content-block blockquote::before {
+    content: "💡";
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    font-size: 20px;
+    line-height: 1;
+    filter: grayscale(1);
+    opacity: 0.8;
+    transform: rotate(30deg);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.night .content-block blockquote p {
+    color: var(--txt-sub);
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-bottom: 0.5em;
+}
+
+.night .content-block blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.night .content-block blockquote:hover {
+    border-color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color), transparent 95%);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--primary-color), transparent 90%), inset 0 0 10px color-mix(in srgb, var(--primary-color), transparent 95%);
+    transform: scale(1.01);
+}
+
+.night .content-block blockquote:hover::before {
+    filter: grayscale(0);
+    opacity: 1;
+    transform: rotate(0deg);
+    text-shadow: 0 0 10px var(--primary-color);
+}
+
+/* ====== 9. 列表样式 (Phycat 风格) ====== */
+.content-block ul {
+    list-style-type: disc;
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.content-block ul ul {
+    list-style-type: circle;
+}
+
+.content-block ul ul ul {
+    list-style-type: square;
+}
+
+.content-block ol {
+    list-style-type: decimal;
+}
+
+.content-block ol ol {
+    list-style-type: lower-alpha;
+}
+
+.content-block ol ol ol {
+    list-style-type: lower-roman;
+}
+
+.content-block ul>li>ol {
+    padding-left: 25px;
+}
+
+.content-block li {
+    position: relative;
+    padding-left: 20px;
+    line-height: var(--line-height, 2.2);
+    margin-bottom: 8px;
+}
+
+.content-block li::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--line-height, 2.2) * 1em);
+    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
+    bottom: 0;
+    left: -18px;
+    border-left: 1px solid var(--primary-color);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.content-block ul>li::before {
+    left: -0.83rem;
+}
+
+.content-block>div>ul>li::before,
+.content-block>div>ol>li::before {
+    display: none;
+}
+
+/* 自定义列表符号 - Phycat 蓝色带光晕 */
+.content-block ul>li::marker {
+    color: var(--primary-color);
+}
+
+.content-block ul li {
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+.content-block ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--primary-color);
+    font-size: 18px;
+    line-height: 1.4;
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--glow-color);
+    border: none;
+    height: auto;
+    width: auto;
+    background: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.content-block ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--line-height, 2.2) * 1em);
+    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
+    bottom: 0;
+    border-left: 1px solid var(--primary-color);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.night .content-block ul li::before {
+    opacity: 0.5;
+}
+
+.content-block ul ul li::before {
+    font-size: 14px;
+    text-shadow: 0 0 6px rgba(0, 122, 255, 0.4);
+}
+
+.content-block ul ul li::before {
+    content: '◦';
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: none;
+    height: auto;
+    width: auto;
+    background: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.content-block ul ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--line-height, 2.2) * 1em);
+    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
+    border-left: 1px solid var(--primary-color);
+    opacity: 0.5;
+}
+
+.content-block ul ul ul li::before {
+    content: '▪';
+    font-size: 10px;
+}
+
+.content-block ul ul ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--line-height, 2.2) * 1em);
+    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
+    border-left: 1px solid var(--primary-color);
+    opacity: 0.5;
+}
+
+.content-block ul ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+/* 任务列表复选框 */
+.content-block input[type="checkbox"],
+.content-block .task-list-item-checkbox {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: -1.3rem !important;
+    top: calc((var(--line-height, 2.2) * 1.4em - var(--checkbox-size, 1.25rem)) / 2) !important;
+    width: var(--checkbox-size, 1.25rem) !important;
+    height: var(--checkbox-size, 1.25rem) !important;
+    z-index: 10;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+}
+
+.content-block input[type="checkbox"]::before,
+.content-block .task-list-item-checkbox::before {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    border-radius: 50% !important;
+    background-color: var(--checkbox-bg-unchecked) !important;
+    border: 2px solid var(--checkbox-border-unchecked) !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+    z-index: 1;
+}
+
+.content-block input[type="checkbox"]:checked::before,
+.content-block .task-list-item-checkbox:checked::before {
+    border: 1px solid var(--primary-color) !important;
+    background-color: var(--checkbox-bg-checked) !important;
+    box-shadow: 0 0 5px var(--primary-color);
+    animation: task-pulse 0.4s forwards;
+}
+
+.content-block input[type="checkbox"]::after,
+.content-block .task-list-item-checkbox::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    top: 45% !important;
+    left: 50% !important;
+    width: 0.45rem !important;
+    height: 0.25rem !important;
+    background-color: transparent !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    border: 2.5px solid #ffffff !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    transform: translate(-50%, -50%) rotate(-45deg) scale(0);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+}
+
+.content-block input[type="checkbox"]:checked::after,
+.content-block .task-list-item-checkbox:checked::after {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) rotate(-45deg) scale(1) !important;
+    border-color: #ffffff !important;
+}
+
+@keyframes task-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ====== 10. 代码块样式 (Phycat 风格) ====== */
+.content-block code {
+    font-family: "SF Mono", "Menlo", "Consolas", "Monaco", monospace;
+    letter-spacing: 0.5px;
+    background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
+    color: var(--primary-color) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 85%);
+    padding: 2px 6px !important;
+    margin: 0 2px;
+    border-radius: 6px;
+    vertical-align: middle;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.content-block code:hover {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--primary-color), transparent 60%);
+    transform: scale(1.05);
+    text-decoration: none !important;
+    -webkit-text-fill-color: #fff !important;
+    position: relative;
+    z-index: 1;
+}
+
+.content-block pre {
+    position: relative;
+    background-color: var(--code-background) !important;
+    border: 1px solid color-mix(in srgb, var(--border-color), transparent 50%) !important;
+    border-radius: 8px;
+    padding: 18px !important;
+    margin: 20px 0;
+    overflow-x: auto;
+    line-height: var(--code-line-height, 1.5);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-block pre:hover {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color), transparent 85%);
+}
+
+.content-block pre code {
+    display: block;
+    padding: 0;
+    overflow-x: auto;
+    color: var(--code-txt) !important;
+    font-family: var(--font-monospace);
+    line-height: var(--code-line-height, 1.5);
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.content-block pre code:hover {
+    background-color: transparent !important;
+    color: var(--code-txt) !important;
+    box-shadow: none;
+    transform: none;
+}
+
+/* ====== 11. 表格样式 (Phycat 风格) ====== */
+.content-block table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 1.5em 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--table-bg);
+    line-height: var(--table-line-height, 1.8);
+}
+
+.content-block table::-webkit-scrollbar {
+    height: 6px;
+}
+
+.content-block table::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+}
+
+.content-block table::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.content-block table::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* 表格容器 - 解决小屏幕溢出问题 */
+.content-block table+* {
+    margin-top: 0;
+}
+
+/* 表格单元格基础样式 */
+.content-block table th,
+.content-block table td {
+    padding: 10px 15px;
+    color: var(--txt-main);
+    border-top: 1px solid var(--table-border-inner);
+    border-left: 1px solid var(--table-border-inner);
+    border-right: none;
+    border-bottom: none;
+    transition: all 0.2s ease;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* 表头样式 */
+.content-block table th {
+    background-color: var(--table-th-bg);
+    color: var(--primary-color);
+    font-weight: bold;
+    white-space: normal;
+    border-top-color: var(--table-th-border);
+    border-left-color: var(--table-th-border);
+    text-align: left;
+}
+
+/* 表格外边框 */
+.content-block table {
+    border: 1px solid var(--border-color);
+}
+
+/* 第一行和第一列的边框 */
+.content-block table thead tr:first-child th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.content-block table thead tr:first-child th:last-child {
+    border-top-right-radius: 8px;
+    border-right: none;
+}
+
+.content-block table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+.content-block table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+    border-right: none;
+    border-bottom: none;
+}
+
+/* 表格悬停效果 */
+.content-block table tbody tr:hover td {
+    background-color: var(--table-row-hover-bg, rgba(0, 0, 0, 0.03));
+}
+
+.content-block table tbody td:hover {
+    background-color: var(--table-cell-hover-bg) !important;
+    color: var(--table-cell-hover-text, var(--primary-color));
+    box-shadow: inset 0 0 0 1px var(--primary-color);
+    cursor: default;
+}
+
+/* 表格交替行颜色 */
+.content-block table tr:nth-child(2n),
+.content-block table tr:nth-child(2n+1) {
+    background-color: transparent !important;
+}
+
+.content-block table thead tr,
+.content-block table thead tr:nth-child(2n),
+.content-block table thead tr:nth-child(2n+1) {
+    background-color: transparent !important;
+}
+
+/* ====== 移动端表格优化 ====== */
+@media (max-width: 600px) {
+    .content-block table {
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .content-block table th,
+    .content-block table td {
+        padding: 8px 10px;
+        white-space: normal;
+    }
+}
+
+/* 夜间模式表格 */
+.night .content-block table tbody td:hover {
+    text-shadow: 0 0 8px var(--primary-color);
+}
+
+/* ====== 12. 图片样式 ====== */
+.content-block img {
+    display: inline-block;
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 10px 0;
+    filter: var(--img-filter, none);
+    border: 1px solid var(--line);
+}
+
+/* ====== 13. 分割线样式 ====== */
+.content-block hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    position: relative;
+    overflow: visible;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.content-block hr::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--primary-color);
+    background-color: var(--bg-card);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.content-block hr:hover {
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+.content-block hr:hover::after {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    transform: translate(-50%, -50%) rotate(225deg) scale(1.5);
+}
+
+/* ====== 14. 键盘按键样式 ====== */
+.content-block kbd {
+    font-family: var(--font-monospace), "CascadiaCode", Consolas, monospace;
+    font-size: 0.9em;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    display: inline-block;
+    min-width: 1.6em;
+    padding: 3px 6px;
+    margin: 0 4px;
+    border-radius: 6px;
+    vertical-align: middle;
+    transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+    text-shadow: none;
+    cursor: default;
+}
+
+.night .content-block kbd {
+    background-color: #333;
+    color: var(--txt-main);
+    border: 1px solid #444;
+    border-top-color: #555;
+    border-bottom-color: #222;
+    box-shadow: 0 4px 0 #222, 0 5px 5px rgba(0, 0, 0, 0.4);
+}
+
+.night .content-block kbd:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #222, 0 3px 3px rgba(0, 0, 0, 0.4);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.content-block kbd {
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-bottom-width: 3px;
+    box-shadow: 0 2px 4px color-mix(in srgb, var(--primary-color), transparent 85%);
+}
+
+.content-block kbd:hover {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+    background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
+    box-shadow: none;
+}
+
+/* ====== 15. 标签样式 ====== */
+.content-block .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 14px;
+    background-color: color-mix(in srgb, var(--primary-color), white 90%);
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    margin: 0 5px;
+    white-space: nowrap;
+    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 70%);
+    transition: all 0.2s ease;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.content-block .tag:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--primary-color), transparent 60%);
+    transform: translateY(-1px);
+}
+
+/* 夜间模式标签 */
+.night .content-block .tag {
+    background-color: color-mix(in srgb, var(--primary-color), transparent 85%);
+    color: var(--txt-main);
+    border-color: color-mix(in srgb, var(--primary-color), transparent 50%);
+}
+
+.night .content-block .tag:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 0 12px var(--glow-color);
+}
+
+/* ====== 16. 挖空效果 (Cloze) ====== */
+
+/* 正面 - 隐藏文字，显示蓝色下划线 */
+.content-block .cloze-hidden {
+    color: transparent;
+    border-bottom: 2px solid var(--primary-color);
+    display: inline;
+    user-select: none;
+}
+
+/* 背面 - 显示的挖空答案（高亮） */
+.content-block .cloze {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+/* 夜间模式挖空 */
+.night .content-block .cloze-hidden {
+    border-bottom-color: var(--primary-color);
+}
+
+.night .content-block .cloze {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* 背面 - 可点击切换的挖空 */
+.content-block .cloze-toggle {
+    color: transparent;
+    border-bottom: 2px solid var(--primary-color);
+    display: inline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+/* 点击后显示答案 */
+.content-block .cloze-toggle.revealed {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.night .content-block .cloze-toggle {
+    border-bottom-color: var(--primary-color);
+}
+
+.night .content-block .cloze-toggle.revealed {
+    color: var(--primary-color);
+}

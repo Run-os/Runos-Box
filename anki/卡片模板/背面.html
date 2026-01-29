@@ -1,0 +1,288 @@
+<!-- 1. 强制夜间模式检测 -->
+<script>
+    (function () {
+        var body = document.body;
+        var isNight = body.classList.contains("night") || body.classList.contains("nightMode") || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isNight) { document.documentElement.classList.add("night"); document.body.classList.add("night"); }
+    })();
+</script>
+
+<!-- 2. 隐藏原始数据 -->
+<div id="raw-Front" style="display:none">{{Front}}</div>
+<div id="raw-Back" style="display:none">{{Back}}</div>
+
+<!-- 3. 卡片容器 -->
+<div class="minimal-card">
+    <!-- 问题 -->
+    <span class="label">Question</span>
+    <div id="render-Front" class="content-block question-text"></div>
+
+    <!-- 分割线 -->
+    <div class="divider"></div>
+
+    <!-- 答案 -->
+    <span class="label">Answer</span>
+    <div id="render-Back" class="content-block answer-text"></div>
+
+    <!-- 图片区域：强制作为 URL 处理 -->
+    {{#image}}
+    <div style="margin-top:20px; text-align:center;">
+        <img src="{{text:image}}"
+            style="max-width:100%; border-radius:12px; border:1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.1); display:inline-block;"
+            onerror="this.style.display='none'">
+    </div>
+    {{/image}}
+</div>
+
+<!-- 4. 核心渲染脚本 -->
+<script>
+    var getResources = [
+        getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"),
+        getCSS("_highlight.css", "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css"),
+        getScript("_highlight.js", "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"),
+        getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"),
+        getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+        getScript("_markdown-it.min.js", "https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"),
+        // markdown-it 官方独立插件
+        getScript("_markdown-it-mark.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-mark@3.0.1/dist/markdown-it-mark.min.js"),
+        getScript("_markdown-it-table.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-table@1.0.0/dist/markdown-it-table.min.js"),
+        getScript("_markdown-it-sub.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.2/dist/markdown-it-sub.min.js"),
+        getScript("_markdown-it-sup.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"),
+    ];
+
+    Promise.all(getResources)
+        .then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"))
+        .then(render)
+        .catch(e => { console.error(e); fallback() });
+
+    function render() {
+        processField("raw-Front", "render-Front");
+        processField("raw-Back", "render-Back");
+        processTags("render-Back");
+        processListBullets("render-Back");
+    }
+
+    function fallback() {
+        document.getElementById("render-Front").innerHTML = document.getElementById("raw-Front").innerHTML;
+        document.getElementById("render-Back").innerHTML = document.getElementById("raw-Back").innerHTML;
+    }
+
+    function processField(sourceID, targetID) {
+        let text = document.getElementById(sourceID).innerHTML;
+        // 转换<br>为换行（优先处理换行，保证表格行分割正确）
+        text = text.replace(/<br\s*[\/]?>/gi, '\n');
+        // 解码HTML实体（全角分隔符、破折号等）
+        text = decodeHtmlEntities(text);
+        // 处理bullet点（移到HTML清理后，避免标签干扰）
+        text = processBulletsInText(text);
+        // 核心修复：全角表格转标准MD表格（含对齐符）
+        text = convertFullwidthTableToMarkdown(text);
+
+        // 初始化 markdown-it，使用官方独立插件
+        let md = new markdownit({
+            html: true,
+            breaks: true,
+            highlight: function (str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try { return hljs.highlight(str, { language: lang }).value; } catch (__) { }
+                }
+                return '';
+            }
+        });
+
+        // 加载 markdown-it 官方独立插件
+        if (typeof markdownitTable !== 'undefined') {
+            md.use(markdownitTable);
+            console.log('[Debug] markdown-it-table loaded');
+        }
+        if (typeof markdownitMark !== 'undefined') {
+            md.use(markdownitMark);
+            console.log('[Debug] markdown-it-mark loaded');
+        }
+        if (typeof markdownitSub !== 'undefined') {
+            md.use(markdownitSub);
+            console.log('[Debug] markdown-it-sub loaded');
+        }
+        if (typeof markdownitSup !== 'undefined') {
+            md.use(markdownitSup);
+            console.log('[Debug] markdown-it-sup loaded');
+        }
+
+        let rendered = md.render(text);
+        let target = document.getElementById(targetID);
+        target.innerHTML = rendered;
+
+        applyTableStyles(target);
+        fixTableRendering(target); // 修复后的表格结构处理
+        processCloze(target);
+
+        // 渲染KaTeX公式
+        renderMathInElement(target, {
+            delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+            throwOnError: false
+        });
+    }
+
+    // 挖空处理函数 - 点击显示/隐藏答案
+    function processCloze(element) {
+        let html = element.innerHTML;
+        const clozeRegex = /\{\{c(\d+)::([^:}]+)(?:::([^}]+))?\}\}/g;
+        html = html.replace(clozeRegex, (match, num, text, hint) => {
+            return '<span class="cloze-toggle" onclick="this.classList.toggle(\'revealed\')">' + text + '</span>';
+        });
+        element.innerHTML = html;
+    }
+
+    // 处理 [文本] 格式的绿色标签
+    function processTags(targetID) {
+        let target = document.getElementById(targetID);
+        target.innerHTML = target.innerHTML.replace(/\[([^\]]+)\]/g, (match, content) => {
+            return '<span class="tag">' + content + '</span>';
+        });
+    }
+
+    // 处理bullet点（•/-）- 转换为标准Markdown无序列表
+    function processBulletsInText(text) {
+        // 将bullet点转换为 markdown 无序列表格式
+        return text.replace(/^[•-]\s+(.+)$/gm, (match, content) => {
+            return '- ' + content.trim();
+        });
+    }
+
+    // 【核心修复】全角表格转标准MD表格（支持行首/尾分隔符、自动添加对齐符）
+    function convertFullwidthTableToMarkdown(text) {
+        if (!text.includes('｜')) return text;
+        const lines = text.split('\n').map(line => line.trim());
+        let result = [], i = 0;
+
+        while (i < lines.length) {
+            const line = lines[i];
+            if (line.includes('｜')) {
+                const tableLines = [];
+                // 收集连续表格行：允许空行（跨行表格），仅当非表格行且非分隔线时终止
+                while (i < lines.length) {
+                    const curr = lines[i].trim();
+                    if (curr === '' || (curr && !curr.includes('｜') && !/[—\-:｜\s]+/.test(curr))) break;
+                    curr && tableLines.push(curr);
+                    i++;
+                }
+                // 转换收集到的表格行（至少2行才是有效表格）
+                if (tableLines.length >= 2) {
+                    result.push(convertTableLinesToMarkdown(tableLines));
+                } else {
+                    result.push(line);
+                }
+            } else {
+                result.push(line);
+                i++;
+            }
+        }
+        return result.join('\n');
+    }
+
+    // 【核心修复】全角表格行转MD表格（自动添加对齐符、修复分隔线转换）
+    function convertTableLinesToMarkdown(tableLines) {
+        let markdown = '', headerLine = tableLines[0], separatorLine = '';
+        // 处理表头：移除行首/尾全角分隔符，分割单元格
+        const headerCells = headerLine.replace(/^｜|｜$/g, '').split('｜').map(c => c.trim());
+        // 生成标准MD分隔线（带左对齐符:，适配所有列）
+        separatorLine = '| ' + headerCells.map(() => ':---').join(' | ') + ' |';
+        // 转换表头行为标准MD格式
+        markdown += '| ' + headerCells.join(' | ') + ' |\n';
+        markdown += separatorLine + '\n';
+        // 转换数据行：从第2行开始，跳过原全角分隔线行
+        for (let j = 1; j < tableLines.length; j++) {
+            const line = tableLines[j];
+            if (/^[—\s｜]+$/.test(line)) continue; // 跳过原全角分隔线
+            const cells = line.replace(/^｜|｜$/g, '').split('｜').map(c => c.trim());
+            markdown += '| ' + cells.join(' | ') + ' |\n';
+        }
+        return markdown;
+    }
+
+    // 解码HTML实体（包括全角分隔符、破折号、特殊符号）
+    function decodeHtmlEntities(text) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = text;
+        let decoded = textarea.value;
+        // 手动解码常见实体
+        decoded = decoded.replace(/&#65374;/g, '｜') // 全角分隔符
+            .replace(/&#8212;/g, '—')   // 全角破折号
+            .replace(/&#8804;/g, '≤')   // 小于等于
+            .replace(/&#8805;/g, '≥')   // 大于等于
+            .replace(/&gt;/g, '>')      // 大于
+            .replace(/&lt;/g, '<');     // 小于
+        return decoded;
+    }
+
+    // 为表格添加样式类
+    function applyTableStyles(target) {
+        target.querySelectorAll('table').forEach(table => {
+            !table.classList.contains('fullwidth-table') && table.classList.add('fullwidth-table');
+        });
+    }
+
+    // 【核心修复】表格结构修复（删除重复表头、正确生成thead/tbody）
+    function fixTableRendering(target) {
+        target.querySelectorAll('table').forEach(table => {
+            const allTr = Array.from(table.querySelectorAll('tr'));
+            if (allTr.length === 0) return;
+            // 1. 生成thead：取第一个tr，不克隆（避免重复）
+            if (!table.querySelector('thead')) {
+                const thead = document.createElement('thead');
+                thead.appendChild(allTr[0]);
+                table.insertBefore(thead, table.firstChild);
+            }
+            // 2. 生成tbody：取剩余tr，移除原有零散tr
+            if (!table.querySelector('tbody')) {
+                const tbody = document.createElement('tbody');
+                allTr.slice(1).forEach(tr => tbody.appendChild(tr));
+                table.appendChild(tbody);
+            }
+            // 3. 移除表格内零散的tr（避免重复）
+            table.querySelectorAll('tr:not(thead > tr):not(tbody > tr)').forEach(tr => tr.remove());
+        });
+    }
+
+    // 处理列表符号样式 - 现在由CSS自动处理标准ul/li，无需额外操作
+    function processListBullets(targetID) {
+        // 保留函数接口，但不再需要额外处理
+        // CSS会自动为markdown-it渲染的标准ul/li列表应用样式
+    }
+
+    // 加载脚本（原有功能）
+    function getScript(path, altURL) {
+        return new Promise((resolve, reject) => {
+            if (window[path]) return resolve();
+            let script = document.createElement("script");
+            script.onload = () => { window[path] = true; resolve(); };
+            script.onerror = () => {
+                let script_online = document.createElement("script");
+                script_online.onload = () => { window[path] = true; resolve(); };
+                script_online.onerror = resolve;
+                script_online.src = altURL;
+                document.head.appendChild(script_online);
+            }
+            script.src = path;
+            document.head.appendChild(script);
+        })
+    }
+
+    // 加载CSS（原有功能）
+    function getCSS(path, altURL) {
+        return new Promise((resolve, reject) => {
+            let css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.onload = resolve;
+            css.onerror = () => {
+                let css_online = document.createElement('link');
+                css_online.rel = 'stylesheet';
+                css_online.href = altURL;
+                document.head.appendChild(css_online);
+                resolve();
+            }
+            css.href = path;
+            document.head.appendChild(css);
+        });
+    }
+</script>
