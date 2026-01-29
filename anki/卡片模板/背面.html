@@ -46,8 +46,6 @@
         // markdown-it 官方独立插件
         getScript("_markdown-it-mark.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-mark@3.0.1/dist/markdown-it-mark.min.js"),
         getScript("_markdown-it-table.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-table@1.0.0/dist/markdown-it-table.min.js"),
-        getScript("_markdown-it-sub.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.2/dist/markdown-it-sub.min.js"),
-        getScript("_markdown-it-sup.min.js", "https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"),
     ];
 
     Promise.all(getResources)
@@ -98,14 +96,6 @@
         if (typeof markdownitMark !== 'undefined') {
             md.use(markdownitMark);
             console.log('[Debug] markdown-it-mark loaded');
-        }
-        if (typeof markdownitSub !== 'undefined') {
-            md.use(markdownitSub);
-            console.log('[Debug] markdown-it-sub loaded');
-        }
-        if (typeof markdownitSup !== 'undefined') {
-            md.use(markdownitSup);
-            console.log('[Debug] markdown-it-sup loaded');
         }
 
         let rendered = md.render(text);

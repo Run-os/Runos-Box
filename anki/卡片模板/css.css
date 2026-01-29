@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
 }
 
-/* ====== 1. 基础布局与变量 ====== */
+/* ====== 1. 基础布局与变量 (默认夜间模式) ====== */
 .card {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "LXGW WenKai", Helvetica, Arial, sans-serif;
     font-size: 16px;
@@ -22,60 +22,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
 
-    /* --- 变量：日间模式 (Phycat Sakura 粉色系) --- */
-    --bg-site: #fff7fa;
-    --bg-card: #ffffff;
-    --txt-main: #1c1719;
-    --txt-sub: #3f3a3b;
-    --primary-color: #ff7096;
-    --secondary-color: #bd93f9;
-    --accent-color: #8be9fd;
-    --link-hover-color: #d81b60;
-    --line: #ebebf0;
-    --glow-color: rgba(255, 112, 150, 0.5);
-    --shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-    --code-bg: #fff4f8;
-    --code-txt: #546e7a;
-    --code-keyword: #d81b60;
-    --code-function: #8e24aa;
-    --code-string: #2e7d32;
-    --code-comment: #b0bec5;
-    --code-block-header-bg: color-mix(in srgb, var(--primary-color), transparent 92%);
-    --border-color: color-mix(in srgb, var(--primary-color), transparent 60%);
-
-    /* 标题样式变量 */
-    --h1-color: var(--txt-main);
-    --h1-size: 1.618em;
-    --h2-color: var(--text-bold, #e91e63);
-    --h2-size: 1.462em;
-    --h3-size: 1.318em;
-    --h4-size: 1.2em;
-
-    /* 表格变量 */
-    --table-bg: rgba(255, 255, 255, 0.4);
-    --table-th-bg: color-mix(in srgb, var(--primary-color), white 90%);
-    --table-th-border: color-mix(in srgb, var(--primary-color), transparent 80%);
-    --table-cell-hover-bg: color-mix(in srgb, var(--primary-color), white 80%);
-    --table-border-inner: rgba(0, 0, 0, 0.06);
-
-    /* 引用块变量 */
-    --blockquote-background-color: color-mix(in srgb, var(--primary-color), white 96%);
-
-    /* 复选框变量 */
-    --checkbox-bg-unchecked: color-mix(in srgb, var(--primary-color), transparent 90%);
-    --checkbox-border-unchecked: color-mix(in srgb, var(--primary-color), transparent 50%);
-    --checkbox-bg-checked: var(--primary-color);
-
-    background-color: var(--bg-site);
-    color: var(--txt-main);
-    letter-spacing: 1px;
-    word-spacing: 2px;
-}
-
-/* --- 变量：夜间模式 (Phycat Vampire Dracula 风格) --- */
-.night .card,
-.night.card,
-body.night .card {
+    /* --- 直接使用夜间模式变量 (Phycat Vampire Dracula 风格) --- */
     --bg-site: #282a36;
     --bg-card: #1c1c1e;
     --txt-main: #f8f8f2;
@@ -109,6 +56,19 @@ body.night .card {
     --checkbox-bg-checked: color-mix(in srgb, var(--primary-color), transparent 80%);
 
     --text-faint: color-mix(in srgb, var(--primary-color), transparent 20%);
+
+    /* 标题样式变量 */
+    --h1-color: var(--txt-main);
+    --h1-size: 1.618em;
+    --h2-color: var(--txt-main);
+    --h2-size: 1.462em;
+    --h3-size: 1.318em;
+    --h4-size: 1.2em;
+
+    background-color: var(--bg-site);
+    color: var(--txt-main);
+    letter-spacing: 1px;
+    word-spacing: 2px;
 }
 
 /* ====== 2. 卡片本体 (自适应容器) ====== */
@@ -140,13 +100,8 @@ body.night .card {
         border-radius: 18px;
         margin: 0;
         box-shadow: none;
-        border: none;
-    }
-
-    .night .minimal-card,
-    body.night .minimal-card {
-        background-color: #121212;
         border: 1px solid #222;
+        background-color: #121212;
     }
 
     .question-text {
@@ -252,6 +207,7 @@ body.night .card {
     border-radius: 4px;
     opacity: 1;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--primary-color), transparent 50%);
 }
 
 .content-block h2::after {
@@ -269,12 +225,13 @@ body.night .card {
 
 .content-block h2:hover {
     color: var(--primary-color);
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block h2:hover::before {
     height: 100%;
     top: 0;
-    opacity: 0.4;
+    opacity: 0.5;
 }
 
 .content-block h2:hover::after {
@@ -283,28 +240,6 @@ body.night .card {
     width: 4px;
     opacity: 1;
     background-color: var(--primary-color);
-}
-
-/* 夜间模式 H2 */
-.night .content-block h2,
-body.night .content-block h2 {
-    color: var(--txt-main);
-}
-
-.night .content-block h2::before {
-    box-shadow: 0 0 8px color-mix(in srgb, var(--primary-color), transparent 50%);
-}
-
-.night .content-block h2:hover {
-    color: var(--primary-color);
-    text-shadow: 0 0 8px var(--glow-color);
-}
-
-.night .content-block h2:hover::before {
-    opacity: 0.5;
-}
-
-.night .content-block h2:hover::after {
     box-shadow: 0 0 12px var(--primary-color);
 }
 
@@ -315,6 +250,7 @@ body.night .content-block h2 {
     padding-left: 15px;
     margin: 1.5em 0 1em;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: block;
 }
 
 .content-block h3::before {
@@ -328,33 +264,18 @@ body.night .content-block h2 {
     background-color: var(--primary-color);
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0.8;
 }
 
 .content-block h3:hover {
     padding-left: 20px;
     color: var(--primary-color);
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block h3:hover::before {
     height: 24px;
     width: 7px;
-}
-
-/* 夜间模式 H3 */
-.night .content-block h3 {
-    display: block;
-    transition: padding-left 0.3s ease, color 0.3s ease;
-}
-
-.night .content-block h3::before {
-    opacity: 0.8;
-}
-
-.night .content-block h3:hover {
-    text-shadow: 0 0 8px var(--glow-color);
-}
-
-.night .content-block h3:hover::before {
     box-shadow: 0 0 8px var(--glow-color);
 }
 
@@ -364,6 +285,8 @@ body.night .content-block h2 {
     padding-left: 20px;
     margin: 1.2em 0 0.8em;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .content-block h4::before {
@@ -382,27 +305,14 @@ body.night .content-block h2 {
 
 .content-block h4:hover {
     color: var(--primary-color);
-    transform: translateX(6px);
+    transform: translateX(5px);
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block h4:hover::before {
     transform: translateY(-50%) scale(1.3);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color), white 70%);
-}
-
-/* 夜间模式 H4 */
-.night .content-block h4 {
-    display: flex;
-    align-items: center;
-}
-
-.night .content-block h4:hover {
-    text-shadow: 0 0 8px var(--glow-color);
-    transform: translateX(5px);
-}
-
-.night .content-block h4:hover::before {
     box-shadow: 0 0 8px var(--glow-color);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color), white 70%);
 }
 
 .content-block h5 {
@@ -410,6 +320,8 @@ body.night .content-block h2 {
     padding-left: 20px;
     margin: 1em 0 0.6em;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .content-block h5::before {
@@ -429,12 +341,14 @@ body.night .content-block h2 {
 
 .content-block h5:hover {
     color: var(--primary-color);
-    transform: translateX(6px);
+    transform: translateX(5px);
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block h5:hover::before {
     background-color: var(--primary-color);
     transform: translateY(-50%) scale(1.2);
+    box-shadow: 0 0 8px var(--glow-color);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color), white 70%);
 }
 
@@ -443,6 +357,8 @@ body.night .content-block h2 {
     padding-left: 20px;
     margin: 1em 0 0.6em;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .content-block h6::before {
@@ -459,31 +375,12 @@ body.night .content-block h2 {
 
 .content-block h6:hover {
     color: var(--primary-color);
-    transform: translateX(6px);
+    transform: translateX(5px);
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block h6:hover::before {
     transform: translateY(-50%) scaleX(1.8);
-}
-
-/* 夜间模式 H5 H6 */
-.night .content-block h5,
-.night .content-block h6 {
-    display: flex;
-    align-items: center;
-}
-
-.night .content-block h5:hover,
-.night .content-block h6:hover {
-    text-shadow: 0 0 8px var(--glow-color);
-    transform: translateX(5px);
-}
-
-.night .content-block h5:hover::before {
-    box-shadow: 0 0 8px var(--glow-color);
-}
-
-.night .content-block h6:hover::before {
     text-shadow: 0 0 8px var(--glow-color);
 }
 
@@ -524,6 +421,7 @@ body.night .content-block h2 {
     background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
     color: var(--primary-color) !important;
     text-decoration: none !important;
+    text-shadow: 0 0 8px var(--glow-color);
 }
 
 .content-block a:hover::before {
@@ -540,48 +438,20 @@ body.night .content-block h2 {
     opacity: 1;
 }
 
-/* 夜间模式链接 */
-.night .content-block a,
-body.night .content-block a {
-    color: var(--primary-color) !important;
-}
-
-.night .content-block a:hover,
-body.night .content-block a:hover {
-    text-shadow: 0 0 8px var(--glow-color);
-}
-
 /* ====== 7. 强调样式 (Phycat 风格) ====== */
 .content-block strong,
 .content-block b {
     font-weight: 700;
-    color: var(--txt-main);
+    color: var(--primary-color);
     display: inline-block;
     transition: transform 0.2s cubic-bezier(0.5, 1.5, 0.5, 1), color 0.2s ease;
 }
 
-.night .content-block strong,
-.night .content-block b,
-body.night .content-block strong,
-body.night .content-block b {
-    color: var(--primary-color);
-}
-
-.night .content-block strong:hover,
-.night .content-block b:hover,
-body.night .content-block strong:hover,
-body.night .content-block b:hover {
+.content-block strong:hover,
+.content-block b:hover {
     transform: translateY(-2px) scale(1.1);
     text-shadow: 0 0 10px var(--primary-color);
     z-index: 1;
-}
-
-/* 日间模式强调 */
-.content-block strong:hover,
-.content-block b:hover {
-    transform: translateY(-2px) scale(1.03);
-    text-shadow: none;
-    color: var(--primary-color) !important;
 }
 
 /* 斜体样式 */
@@ -626,36 +496,17 @@ body.night .content-block b:hover {
     }
 }
 
-.night .content-block em,
-body.night .content-block em {
-    color: var(--secondary-color);
-}
-
-.night .content-block em:hover,
-body.night .content-block em:hover {
+.content-block em:hover {
     color: var(--primary-color);
     font-weight: normal;
     -webkit-text-stroke: 0.5px var(--primary-color);
     text-shadow: 0 0 8px var(--glow-color);
 }
 
-.night .content-block em:hover::after {
-    opacity: 1;
-    background-color: var(--primary-color);
-    box-shadow: 0 0 8px var(--primary-color);
-    animation: waveFlow 1s linear infinite;
-}
-
-.content-block em:hover {
-    color: var(--primary-color);
-    font-weight: normal;
-    -webkit-text-stroke: 0.6px var(--primary-color);
-    text-shadow: none;
-}
-
 .content-block em:hover::after {
     opacity: 1;
     background-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
     animation: waveFlow 1s linear infinite;
 }
 
@@ -664,34 +515,17 @@ body.night .content-block em:hover {
 .content-block del {
     text-decoration: line-through;
     transition: all 0.3s ease;
-}
-
-.night .content-block s,
-.night .content-block del,
-body.night .content-block s,
-body.night .content-block del {
     text-decoration-color: var(--primary-color);
     color: #888;
-}
-
-.night .content-block s:hover,
-.night .content-block del:hover,
-body.night .content-block s:hover,
-body.night .content-block del:hover {
-    opacity: 1;
-    color: var(--primary-color) !important;
-    text-decoration-color: var(--secondary-color);
-    cursor: not-allowed;
-    text-shadow: 0 0 8px var(--primary-color);
 }
 
 .content-block s:hover,
 .content-block del:hover {
     opacity: 1;
-    color: var(--txt-main) !important;
-    text-decoration-color: #ff5555;
+    color: var(--primary-color) !important;
+    text-decoration-color: var(--secondary-color);
     cursor: not-allowed;
-    text-shadow: none;
+    text-shadow: 0 0 8px var(--primary-color);
 }
 
 /* 高亮标记 */
@@ -701,12 +535,14 @@ body.night .content-block del:hover {
     margin: 0;
     border-radius: 4px;
     font-weight: inherit;
-    color: inherit;
+    color: color-mix(in srgb, var(--primary-color), white 20%) !important;
     background-repeat: no-repeat;
     background-position: 0 100%;
     transition: background-size 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
+    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 50%), transparent) !important;
+    background-size: 100% 40%;
 }
 
 .content-block mark::before,
@@ -715,28 +551,7 @@ body.night .content-block del:hover {
     display: none !important;
 }
 
-.content-block mark {
-    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 60%), transparent);
-    background-size: 100% 40%;
-    color: var(--txt-main);
-}
-
 .content-block mark:hover {
-    background-size: 100% 100%;
-    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 40%), color-mix(in srgb, var(--primary-color), transparent 80%));
-}
-
-.night .content-block mark,
-body.night .content-block mark {
-    background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 50%), transparent) !important;
-    background-size: 100% 40%;
-    color: color-mix(in srgb, var(--primary-color), white 20%) !important;
-    text-shadow: none;
-    box-shadow: none;
-}
-
-.night .content-block mark:hover,
-body.night .content-block mark:hover {
     background-size: 100% 100%;
     background-image: linear-gradient(to top, color-mix(in srgb, var(--primary-color), transparent 20%), color-mix(in srgb, var(--primary-color), transparent 80%)) !important;
     color: #fff !important;
@@ -750,57 +565,6 @@ body.night .content-block mark:hover {
     position: relative;
     margin: 20px 0;
     padding: 18px 20px 18px 48px;
-    background-color: var(--blockquote-background-color);
-    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 80%);
-    border-radius: 16px;
-    color: var(--txt-sub);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.content-block blockquote::before {
-    content: "✨";
-    position: absolute;
-    left: 14px;
-    top: 18px;
-    font-size: 20px;
-    line-height: 1;
-    font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
-    filter: none;
-    opacity: 1;
-    transform: rotate(30deg);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.content-block blockquote p {
-    color: var(--txt-sub);
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin-bottom: 0.5em;
-    line-height: var(--blockquote-line-height, 1.6);
-}
-
-.content-block blockquote p:last-child {
-    margin-bottom: 0;
-}
-
-.content-block blockquote:hover {
-    transform: scale(1.02);
-    background-color: color-mix(in srgb, var(--primary-color), white 92%);
-    border-color: var(--primary-color);
-    box-shadow: 0 8px 20px color-mix(in srgb, var(--primary-color), transparent 85%);
-}
-
-.content-block blockquote:hover::before {
-    transform: rotate(0deg);
-    text-shadow: 0 0 8px var(--primary-color);
-}
-
-/* 夜间模式引用块 */
-.night .content-block blockquote,
-body.night .content-block blockquote {
-    position: relative;
-    margin: 20px 0;
-    padding: 18px 20px 18px 48px;
     color: var(--txt-sub);
     background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid color-mix(in srgb, var(--secondary-color), transparent 70%);
@@ -808,7 +572,7 @@ body.night .content-block blockquote {
     transition: all 0.3s ease;
 }
 
-.night .content-block blockquote::before {
+.content-block blockquote::before {
     content: "💡";
     position: absolute;
     left: 14px;
@@ -821,25 +585,25 @@ body.night .content-block blockquote {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.night .content-block blockquote p {
+.content-block blockquote p {
     color: var(--txt-sub);
     margin-block-start: 0;
     margin-block-end: 0;
     margin-bottom: 0.5em;
 }
 
-.night .content-block blockquote p:last-child {
+.content-block blockquote p:last-child {
     margin-bottom: 0;
 }
 
-.night .content-block blockquote:hover {
+.content-block blockquote:hover {
     border-color: var(--primary-color);
     background-color: color-mix(in srgb, var(--primary-color), transparent 95%);
     box-shadow: 0 0 15px color-mix(in srgb, var(--primary-color), transparent 90%), inset 0 0 10px color-mix(in srgb, var(--primary-color), transparent 95%);
     transform: scale(1.01);
 }
 
-.night .content-block blockquote:hover::before {
+.content-block blockquote:hover::before {
     filter: grayscale(0);
     opacity: 1;
     transform: rotate(0deg);
@@ -877,9 +641,10 @@ body.night .content-block blockquote {
     padding-left: 25px;
 }
 
+/* 自定义列表样式 - 使用 ::before 创建垂直线 */
 .content-block li {
     position: relative;
-    padding-left: 20px;
+    padding-left: 0px;
     line-height: var(--line-height, 2.2);
     margin-bottom: 8px;
 }
@@ -890,14 +655,14 @@ body.night .content-block blockquote {
     top: calc(var(--line-height, 2.2) * 1em);
     height: calc(100% - (var(--line-height, 2.2) * 1.5em));
     bottom: 0;
-    left: -18px;
+    left: -15px;
     border-left: 1px solid var(--primary-color);
     opacity: 0.5;
     pointer-events: none;
 }
 
 .content-block ul>li::before {
-    left: -0.83rem;
+    left: -1.1rem;
 }
 
 .content-block>div>ul>li::before,
@@ -905,96 +670,22 @@ body.night .content-block blockquote {
     display: none;
 }
 
-/* 自定义列表符号 - Phycat 蓝色带光晕 */
+/* 自定义列表符号 - 使用 ::marker */
 .content-block ul>li::marker {
     color: var(--primary-color);
+    font-size: 1.2em;
 }
 
-.content-block ul li {
-    position: relative;
-    padding-left: 20px;
-    line-height: 1.8;
-    margin-bottom: 8px;
-}
-
-.content-block ul li::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--primary-color);
-    font-size: 18px;
-    line-height: 1.4;
-    font-weight: bold;
-    text-shadow: 0 0 8px var(--glow-color);
-    border: none;
-    height: auto;
-    width: auto;
-    background: none;
-    opacity: 1;
-    transform: none;
-    transition: none;
-}
-
-.content-block ul li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: calc(var(--line-height, 2.2) * 1em);
-    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
-    bottom: 0;
-    border-left: 1px solid var(--primary-color);
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.night .content-block ul li::before {
-    opacity: 0.5;
-}
-
-.content-block ul ul li::before {
-    font-size: 14px;
-    text-shadow: 0 0 6px rgba(0, 122, 255, 0.4);
-}
-
-.content-block ul ul li::before {
+/* 二级列表使用空心圆 */
+.content-block ul ul>li::marker {
     content: '◦';
-    font-size: 12px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: none;
-    height: auto;
-    width: auto;
-    background: none;
-    opacity: 1;
-    transform: none;
-    transition: none;
+    font-size: 1em;
 }
 
-.content-block ul ul li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: calc(var(--line-height, 2.2) * 1em);
-    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
-    border-left: 1px solid var(--primary-color);
-    opacity: 0.5;
-}
-
-.content-block ul ul ul li::before {
+/* 三级列表使用方块 */
+.content-block ul ul ul>li::marker {
     content: '▪';
-    font-size: 10px;
-}
-
-.content-block ul ul ul li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: calc(var(--line-height, 2.2) * 1em);
-    height: calc(100% - (var(--line-height, 2.2) * 1.5em));
-    border-left: 1px solid var(--primary-color);
-    opacity: 0.5;
+    font-size: 0.9em;
 }
 
 .content-block ul ul {
@@ -1251,6 +942,7 @@ body.night .content-block blockquote {
     color: var(--table-cell-hover-text, var(--primary-color));
     box-shadow: inset 0 0 0 1px var(--primary-color);
     cursor: default;
+    text-shadow: 0 0 8px var(--primary-color);
 }
 
 /* 表格交替行颜色 */
@@ -1277,11 +969,6 @@ body.night .content-block blockquote {
         padding: 8px 10px;
         white-space: normal;
     }
-}
-
-/* 夜间模式表格 */
-.night .content-block table tbody td:hover {
-    text-shadow: 0 0 8px var(--primary-color);
 }
 
 /* ====== 12. 图片样式 ====== */
@@ -1347,9 +1034,6 @@ body.night .content-block blockquote {
     transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
     text-shadow: none;
     cursor: default;
-}
-
-.night .content-block kbd {
     background-color: #333;
     color: var(--txt-main);
     border: 1px solid #444;
@@ -1358,26 +1042,11 @@ body.night .content-block blockquote {
     box-shadow: 0 4px 0 #222, 0 5px 5px rgba(0, 0, 0, 0.4);
 }
 
-.night .content-block kbd:hover {
+.content-block kbd:hover {
     transform: translateY(2px);
     box-shadow: 0 2px 0 #222, 0 3px 3px rgba(0, 0, 0, 0.4);
     color: var(--primary-color);
     border-color: var(--primary-color);
-}
-
-.content-block kbd {
-    background-color: #fff;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-    border-bottom-width: 3px;
-    box-shadow: 0 2px 4px color-mix(in srgb, var(--primary-color), transparent 85%);
-}
-
-.content-block kbd:hover {
-    transform: translateY(2px);
-    border-bottom-width: 1px;
-    background-color: color-mix(in srgb, var(--primary-color), transparent 90%);
-    box-shadow: none;
 }
 
 /* ====== 15. 标签样式 ====== */
@@ -1386,14 +1055,14 @@ body.night .content-block blockquote {
     align-items: center;
     justify-content: center;
     padding: 3px 14px;
-    background-color: color-mix(in srgb, var(--primary-color), white 90%);
-    color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color), transparent 85%);
+    color: var(--txt-main);
     font-size: 14px;
     font-weight: 500;
     border-radius: 8px;
     margin: 0 5px;
     white-space: nowrap;
-    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 70%);
+    border: 1px solid color-mix(in srgb, var(--primary-color), transparent 50%);
     transition: all 0.2s ease;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
@@ -1402,21 +1071,8 @@ body.night .content-block blockquote {
 .content-block .tag:hover {
     background-color: var(--primary-color);
     color: #fff;
-    box-shadow: 0 0 10px color-mix(in srgb, var(--primary-color), transparent 60%);
-    transform: translateY(-1px);
-}
-
-/* 夜间模式标签 */
-.night .content-block .tag {
-    background-color: color-mix(in srgb, var(--primary-color), transparent 85%);
-    color: var(--txt-main);
-    border-color: color-mix(in srgb, var(--primary-color), transparent 50%);
-}
-
-.night .content-block .tag:hover {
-    background-color: var(--primary-color);
-    color: #fff;
     box-shadow: 0 0 12px var(--glow-color);
+    transform: translateY(-1px);
 }
 
 /* ====== 16. 挖空效果 (Cloze) ====== */
@@ -1441,16 +1097,6 @@ body.night .content-block blockquote {
     -webkit-box-decoration-break: clone;
 }
 
-/* 夜间模式挖空 */
-.night .content-block .cloze-hidden {
-    border-bottom-color: var(--primary-color);
-}
-
-.night .content-block .cloze {
-    background-color: var(--primary-color);
-    color: #ffffff;
-}
-
 /* 背面 - 可点击切换的挖空 */
 .content-block .cloze-toggle {
     color: transparent;
@@ -1464,12 +1110,4 @@ body.night .content-block blockquote {
 .content-block .cloze-toggle.revealed {
     color: var(--primary-color);
     font-weight: 600;
-}
-
-.night .content-block .cloze-toggle {
-    border-bottom-color: var(--primary-color);
-}
-
-.night .content-block .cloze-toggle.revealed {
-    color: var(--primary-color);
 }
